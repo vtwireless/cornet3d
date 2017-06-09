@@ -1,0 +1,156 @@
+#!@NODEJS_SHABANG@
+
+// We use this nodejs script to build index.html because we use nodejs to
+// configure this service in ../lib/configure.js.
+
+fs = require('fs');
+config = require('../lib/configure').configure();
+config = require('../lib/configDefaults').configDefaults(config);
+
+console.log('Creating "index.html" with configuration: ' + JSON.stringify(config));
+
+var fout = fs.openSync('index.html', 'w+')
+
+function appendFile(file) {
+    fs.writeSync(fout,
+`<!-- ============================================================
+     =       START file: ${file}
+     ============================================================ -->
+`);
+
+    fs.writeSync(fout, fs.readFileSync(file));
+    fs.writeSync(fout,
+`<!-- ============================================================
+     =       END file: ${file}
+     ============================================================ -->
+`);
+}
+
+function appendStr(str) {
+    fs.writeSync(fout, str);
+}
+
+
+appendStr(`<!DOCTYPE html>
+<!--
+   ****************************************************************** 
+                 This is a generated file.
+
+      You may want to edit the source file ${__filename}
+      instead of this file, that is if you have the source.
+   
+   ******************************************************************
+-->
+`);
+
+appendFile('index.html.0.head.src');
+appendFile('index.html.1.scene.src');
+
+function encodeStr(str) {
+    // char to escape code dictionary
+    var dict = {
+        '<': '\\x3C',
+        '/': '\\x2F',
+        '>': '\\x3E'
+    };
+    for(c in dict)
+        str = str.replace(c, dict[c]);
+    return str;
+}
+
+
+var radioIndex = 0;
+var nl = '\n';
+
+if(config['floors'] !== undefined)
+for(floorName in config['floors']) {
+    var floor = config['floors'][floorName];
+    console.log('\nfloor: ' + floorName);
+    rotation = '';
+    if(floor['rotation'] !== undefined)
+        rotation = ' rotation="' + floor['rotation'] + '"';
+    imagetexture = '';
+    if(floor['image'] !== undefined)
+        imagetexture = '\n' +
+            "<imagetexture url='" +
+            floor['image'] +
+            "'></imagetexture>";
+
+    var groupId = floor["groupId"];
+    var translation = floor["translation"];
+    var elevationgridId = floor["elevationgridId"];
+    var materialId = floor["materialId"];
+
+    appendStr(`
+    <group id='${floor["groupId"]}'>
+        <transform translation='${translation}'${rotation}>
+	    <shape
+                onmouseover='corStatus.floorFocus("${materialId}");'
+                onmouseout='corStatus.floorUnFocus("${materialId}");'
+                onclick='corStatus.floorClick("${groupId}");'>
+		<appearance>
+		    <material id='${materialId}'
+                        diffuseColor='0.4 0.4 0.1'
+                        transparency='0.2'>
+                    </material>${imagetexture}
+                </appearance>
+                <elevationgrid id='${elevationgridId}'
+                    height='0.0 0.0 0.0 0.0' solid='false' xDimension='2'
+                    zDimension='2' xSpacing='19.98' zSpacing='6.48'
+                    ccw='TRUE' colorPerVertex='true'>
+                </elevationgrid>
+	    </shape>
+	</transform>${nl}`);
+
+    if(floor['radios'] !== undefined)
+        floor['radios'].forEach(function(radio) {
+            console.log('   ' + radio['index'] + ' = ' + JSON.stringify(radio));
+            height = '';
+            radius = '';
+            if(radio['shape'] == 'cylinder') {
+                radius = '.2';
+                height = "height='0.501' ";
+            } else { // radio['shape'] == 'sphere'
+                radius = '.201';
+            }
+
+            var translation = radio["translation"];
+            var host = radio["host"];
+            var addr = radio["addr"];
+            var materialId = radio["materialId"];
+            var shape = radio["shape"];
+            var tag = encodeStr(radio["tag"]);
+            var shapeId = radio['shapeId'];
+            var index = radio['index'];
+
+            appendStr(`
+        <transform translation='${translation}'>
+            <shape id='${shapeId}' containerField='children'
+                onmouseover='oTooltip.show("${tag}");'
+                onmouseout='oTooltip.hide("");'
+                onclick='corStatus.showSpectrum(${index},"${host}","${addr}");'>
+		<appearance containerField='appearance'>
+                    <material id='${materialId}' ambientIntensity='.2'
+                        shininess='.2' diffuseColor='1 0 0'>
+                    </material>
+		</appearance>
+                <${shape} containerField='geometry'
+                    ${height}radius='.2'>
+                </${shape}>
+	    </shape>
+        </transform>${nl}`);
+
+            ++radioIndex;
+    });
+
+    appendStr(`    </group>${nl}${nl}`);
+}
+
+
+appendFile('index.html.4.spectrum_group.src')
+appendFile('index.html.5.spectrum_widget.src')
+appendFile('index.html.6.bottom.src')
+
+
+fs.closeSync(fout);
+

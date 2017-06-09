@@ -1,0 +1,117 @@
+#!/usr/bin/env python
+
+
+##################################################
+# Gnuradio Python Flow Graph
+# Title: Spectrum Sensing Nikita
+# Generated: Wed Feb 26 12:29:17 2014
+##################################################
+
+
+# example run:
+#
+#   ./spectrum_test -f 751000000 -b 12000000 -n 32 -r 1 -a 192.168.10.3
+#
+
+from gnuradio import blocks
+from gnuradio import eng_notation
+from gnuradio import fft
+from gnuradio import gr
+from gnuradio import uhd
+from gnuradio.eng_option import eng_option
+from gnuradio.fft import window
+from gnuradio.filter import firdes
+
+import time
+import argparse
+#import thread
+from socket import *
+
+class spectrum_sensing_nikita(gr.top_block):
+
+    def __init__(self, center_freq, bins, bandwidth, radioAddr):
+        gr.top_block.__init__(self, "Spectrum Sensing Nikita")
+
+        ##################################################
+        # Variables
+        ##################################################
+        self.samp_rate = samp_rate = bandwidth
+        self.center_freq = center_freq
+        self.bins = bins
+        self.bandwidth = bandwidth
+
+        ##################################################
+        # Blocks
+        ##################################################
+        self.uhd_usrp_source_0 = uhd.usrp_source(
+        	device_addr = 'addr=' + radioAddr,
+        	stream_args = uhd.stream_args(
+        		cpu_format="fc32",
+        		channels=range(1)
+        	),
+        )
+        self.uhd_usrp_source_0.set_samp_rate(samp_rate)
+        self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
+        self.uhd_usrp_source_0.set_gain(20, 0)
+        self.uhd_usrp_source_0.set_bandwidth(bandwidth, 0)
+        self.fft_vxx_0 = fft.fft_vcc(bins, True, (window.blackmanharris(bins)), True, 1)
+        self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, bins)
+        self.blocks_probe_signal_vx_0 = blocks.probe_signal_vf(bins)
+        self.blocks_complex_to_mag_0 = blocks.complex_to_mag(bins)
+
+        ##################################################
+        # Connections
+        ##################################################
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_stream_to_vector_0, 0))
+        self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
+        self.connect((self.fft_vxx_0, 0), (self.blocks_complex_to_mag_0, 0))
+        self.connect((self.blocks_complex_to_mag_0, 0), (self.blocks_probe_signal_vx_0, 0))
+
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+
+    def set_center_freq(self, center_freq):
+        self.center_freq = center_freq
+        self.uhd_usrp_source_0.set_center_freq(self.center_freq, 0)
+
+    def set_bins(self, bins):
+        self.bins = bins
+
+    def set_bandwidth(self, bandwidth):
+        self.bandwidth = bandwidth
+        self.uhd_usrp_source_0.set_bandwidth(self.bandwidth, 0)
+
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description=("""
+Spectrum sensing.  Replace the CAPITALIZED words with input values.
+Example run: {file} -f 751000000 -b 12000000 -n 32 -r 1 -a 192.168.10.3
+""").format(file=__file__))
+    parser.add_argument('-f','--center_frequency', help='Center frequency', required=True)
+    parser.add_argument('-b','--bandwidth', help='Bandwidth, not to exceed 20 MHz', required=True)
+    parser.add_argument('-n','--bins', help='Number of FFT bins.  More for higher accuracy', required=True)
+    parser.add_argument('-r','--rate', help='Number of times per second the data is sent', required=True)
+    parser.add_argument('-a','--radio_address', type=str, default='', \
+            help='IP address of USRP (radio) example: -a 192.168.10.3')
+    
+    args = vars(parser.parse_args())
+
+
+    tb = spectrum_sensing_nikita(float(args['center_frequency']),
+            int(float(args['bins'])), float(args['bandwidth']),
+            args['radio_address'])
+    
+    period=1/float(args['rate'])
+
+    print '%s ' % list(tb.blocks_probe_signal_vx_0.level())
+    print '-------------------' , tb.blocks_probe_signal_vx_0.level()
+
+    while True:
+
+        time.sleep(period)
+        print '%s ' % list(tb.blocks_probe_signal_vx_0.level())
+

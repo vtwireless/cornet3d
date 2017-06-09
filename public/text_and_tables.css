@@ -1,0 +1,57 @@
+.section{
+	font-size: 12px;
+	font-weight: normal;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	color: #039;
+}
+
+h1{
+	font-family: "Book Antiqua", Sans-Serif;
+}
+
+h2{
+	font-family: "Book Antiqua", Sans-Serif;
+}
+
+h3{
+	font-family: "Book Antiqua", Sans-Serif;
+}
+
+.gradient-table
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	margin: 0px;
+	width: 100%;
+	text-align: center;
+	border-collapse: collapse;
+}
+.gradient-table th
+{
+	font-size: 13px;
+	font-weight: normal;
+	padding: 8px;
+	background: #b9c9fe url('icons/gradhead.png') repeat-x;
+	border-top: 2px solid #d3ddff;
+	border-bottom: 1px solid #fff;
+	color: #039;
+}
+.gradient-table td
+{
+	padding: 8px; 
+	border-bottom: 1px solid #fff;
+	color: #669;
+	border-top: 1px solid #fff;
+	background: #e8edff url('icons/gradback.png') repeat-x;
+}
+.gradient-table tfoot tr td
+{
+	background: #e8edff;
+	font-size: 12px;
+	color: #99c;
+}
+.gradient-table tbody tr:hover td
+{
+	background: #d0dafd url('icons/gradhover.png') repeat-x;
+	color: #339;
+}

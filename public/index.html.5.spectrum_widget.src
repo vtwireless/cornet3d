@@ -1,0 +1,76 @@
+    <div id='slidersContainer'>
+        <!-- ============================================================= -->
+        <!--    Spectrum Viewer Controls                                      -->
+        <!-- ============================================================= -->        
+        <div id='settingsDiv' class='settingsDiv' style='display:none; text-align:center;'>
+            <div class="settingsTitleBar">Spectrum Viewer Controls<img id="SVC_CloseBtn" class="closeBtn" src="icons/closeBtn.png"/></div>
+            <div class="slidersTableContainer">
+                <div class="controlTableRow"></div>
+                <div class="controlTable" > 
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">FREQUENCY:</div>
+                        <div class="controlTableCol2">
+				<input id='f' size='8' value='770' style='text-align:center'/> MHz
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">BANDWIDTH:</div>
+                        <div class="controlTableCol2">
+			  <input id='b' size='8' value='12' style='text-align:center'/> MHz
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">BINS:</div>
+                        <div class="controlTableCol2">
+			  <input id='n' size='8' value='10' style='text-align:center'/>
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">UPDATES/SEC:</div>
+                        <div class="controlTableCol2">
+			  <input id='r' size='8' value='2' style='text-align:center'/>
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">SWEEPS:</div>
+                        <div class="controlTableCol2">
+			  <input id='s' size='8' value='1' style='text-align:center'/>
+                        </div>
+                    </div>                    
+                </div>
+			
+				
+		<div id='scaleSlider'>
+                           
+		    <div id="scaleSlider" class='sliderDiv' 
+                        style="margin-top: 10px; width: 100%;" 
+                        title='Y-scale for making graph flatter/stretched'>
+			<div class='sliderLabel' style="display: inline-block">Scale</div>
+			<div id="y-scale" class='sliderLabel' style="display: inline-block">1</div> 
+			<div class='sliderLabel' style="display: inline-block">times</div>
+			<br/>
+			<div id="slider-y-scale" style="display: block; margin-top: 10px; margin-left: auto; margin-right: auto;">&gt;</div>
+		    </div>
+					
+		    <div id="historySlider" class='sliderDiv' 
+                            style="margin-top: 20px; width: 100%;"
+                            title='Change history of the graph' >
+		        <div class='sliderLabel' style="display: inline-block">History</div>
+			<div id="time-slices" class='sliderLabel' style="display: inline-block">10</div>
+			<div class='sliderLabel' style="display: inline-block">time-slices</div>
+			<br/>
+			<div id="slider-time-slices" style="display: block; margin-top: 10px; margin-left: auto; margin-right: auto;">&gt;</div>
+			<br/>
+			</div>
+		    </div>
+            
+		</div>
+
+             <input id="updateSpectrumViewerControls" 
+                    type="button" 
+                    class="tutorialUpdate_button" 
+                    style="position: absolute; bottom: 5px; left: 70px; display:inline-block;" 
+                    title="click here to update spectrum viewer parameters" 
+                    value="Update" />
+          
+	</div>

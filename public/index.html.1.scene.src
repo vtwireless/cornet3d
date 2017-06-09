@@ -1,0 +1,24 @@
+<x3d id="x3dEl" 
+         xmlns="http://www.x3dom.org/x3dom" 
+         showStat="false" showLog="false" 
+         x="0px" y="0px" 
+         altImg="noWebGL.jpg" 
+         style="width:100%;height:98%;border-style:none;cursor:default;" 
+         onmouseover="oTooltip.append(event,'tooltip');" 
+         onmousemove="oTooltip.follow(event);" 
+         onmouseout="oTooltip.remove();">
+			<scene>
+				<background skyColor='0 0.2 0.5 0 0 0'></background>
+				<viewpoint id="view_1" position='0 10 15' orientation='-1 0 0 0.5'></viewpoint>
+				<navigationinfo headlight='false'></navigationinfo>
+                                <!--type='"EXAMINE" "ANY"' transitionType='"ANIMATE"' transitionTime='1.0'/--> 
+                                <!--DirectionalLight ambientIndensity="0.5" color='1 1 1' direction='0 0 -1'/--> 
+                                <!--directionalLight ambientIntensity='0.5' intensity='0.5' direction='1 0 0' global='true'>
+                                                          </directionalLight-->
+                                
+                                <!--directionalLight ambientIntensity='0.5' intensity='0.5' direction='0 0 -1' global='true'>
+                                      </directionalLight-->
+				<Transform id='rootT' rotation="1 0 0 0">
+					<Group id='floorsGroup'>
+                                            <directionalLight ambientIntensity='0' intensity='0.5' direction='0 -1 0' global='false'>
+                                            </directionalLight>

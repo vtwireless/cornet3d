@@ -1,0 +1,22 @@
+{
+  "name": "cornet3d",
+  "version": "0.1.0",
+  "description": "web server for cornet3d",
+  "dependencies": {
+    "ws": "2.2.0",
+    "glob": "7.1.1",
+    "express": "4.15.3"
+  },
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vtwireless/cornet3d"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/vtwireless/cornet3d"
+  },
+  "homepage": "https://github.com/vtwireless/cornet3d",
+  "license": "AGPL-1.0"
+}

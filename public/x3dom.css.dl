@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. ../download.bash
+
+# Usage: Download target url [sha512sum]
+
+Download x3dom.css "https://x3dom.org/download/1.7.2/x3dom.css"\
+ "19f7c63f89c751aa525598e84c3fde5c5de27647dbfe639bf798eae6fb128b6dfd2fd33\
+1f47ec3592c6de63d38aa53c8adfd43d76663603b19f525288f035971"

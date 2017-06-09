@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. ../download.bash
+
+# Usage: Download target url [sha512sum]
+
+Download jquery-ui.js\
+ "http://code.jquery.com/ui/1.10.3/jquery-ui.js"\
+ "eb1c05921adc80474acf15d80c04344236031d6de5f05a36c0d03663fba22da3ae31cf0\
+7bba7f3b048d3ca9154d3e995202378ce8defb83a294a2ad3f06d6ad4"

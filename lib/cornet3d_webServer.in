@@ -1,0 +1,153 @@
+#!@NODEJS_SHABANG@
+
+// config is derived from the users configuration
+// file configure.js
+const config =
+    require('./configDefaults').
+        configDefaults(require('./configure').configure());
+
+// parse command-line option from program arguments
+const opts = require('./options.js').parse(config);
+
+
+console.log('config=' + JSON.stringify(config) + '\n');
+console.log('opts=' + JSON.stringify(opts) + '\n');
+
+
+const
+    util = require('./util'),
+    path = require('path'),
+    process = require('process'),
+    fs = require('fs'),
+    express = require('express'),
+    webSocket = require('ws'),
+    expressApp = express();
+
+
+if(opts.local) {
+    var bindAddress = 'localhost';
+    console.log('Only localhost clients may connect');
+} else {
+    var bindAddress = '::';
+    console.log('Any address may connect');
+}
+
+
+// Configure express services:
+expressApp.use(express.static(fs.realpathSync(path.join(
+    __dirname, '..', 'public'))));
+
+
+// This effectively replaces socket.IO without the unneeded Sledgehammers.
+function wsOnConnection(socket, ws) {
+
+    var address = socket._socket.remoteAddress + ':' +
+        socket._socket.remotePort;
+    var onCallbacks = {};
+
+    console.log('got connection from: ' + address);
+
+    // This receives messages like socket.IO
+    socket.on('message', function(message) {
+
+        console.log(address + ' got message:\n   ' + message);
+
+        // We assume that the data is in a json string like so:
+        // ev.data =  { name: messageName, args:  [ {}, {}, {}, ... ] }
+
+        var obj = JSON.parse(message);
+        var name = obj.name;
+        if(name === undefined || obj.args === undefined ||
+                !(obj.args instanceof Array)) {
+            console.log('Bad WebSocket "on" message from ' +
+                    ws.url + '\n  ' + e.data);
+            return;
+        }
+        if(onCallbacks[name] === undefined) {
+            console.log('WebSocket on callback "' + name +
+                    '" not found for message from ' + ws.url + ':' +
+                    '\n  ' + e.data);
+            return;
+        }
+        onCallbacks[name](...obj.args);
+    });
+
+    socket.on('close', function() {
+
+        console.log(address + ' closed');
+    });
+
+    // Like socket.IO emit()
+    socket.Emit = function() {
+
+        var args = [].slice.call(arguments);
+        var name = args.shift();
+        socket.send(JSON.stringify({ name: name, args: args }));
+    };
+
+    // Like socket.IO on()
+    socket.On = function(name, func) {
+
+        onCallbacks[name] = func;
+    };
+
+    // Let the client know they connected
+    socket.Emit('connect', 'hello client');
+
+    socket.On('radiosStatus', function() {
+
+        console.log(address + ' "radiosStatus" request:');
+        util.radiosStatus(config, function(radiosStatus) {
+            socket.Emit('radiosStatus', radiosStatus);
+        });
+    });
+
+    // Request to send spectrum data from a radio to
+    // this client via cornet3d_spectrumServer.
+    socket.On('startSpectrum', function(radioParameters) {
+
+        console.log(address + ' "startSpectrum" request');
+
+        util.startSpectrum(radioParameters, socket, config, function(stat, error) {
+            // If this succeeds it will emit 'updateSpectrum'
+            if(error) {
+                console.log(error);
+                socket.Emit('stopSpectrum', radioParameters);
+            } else console.log(stat);
+        });
+    });
+
+
+    // TODO: add an emit broadcast and rooms.
+}
+
+
+function createServer(httpType, port, opts = null) {
+
+    if(httpType === 'http')
+        var server = require(httpType).createServer(expressApp);
+    else if(httpType === 'https')
+        var server = require(httpType).createServer(opts, expressApp);
+    else
+        throw 'bad server type ' + httpType
+
+    server.listen(parseInt(port), bindAddress, function() {
+        console.log(httpType +
+            ' and webWockets server listening on port: ' +
+            port);
+    });
+
+    var ws = new webSocket.Server({server: server});
+    ws.on('connection', function(socket) { wsOnConnection(socket, ws); });
+}
+
+
+if(opts.httpPort !== false)
+    createServer('http', opts.httpPort);
+
+
+if(opts.httpsPort !== false)
+    createServer('https', opts.httpsPort, {
+        key: fs.readFileSync(path.join(__dirname, 'key.pem')),
+        cert: fs.readFileSync(path.join(__dirname, 'cert.pem'))
+    });

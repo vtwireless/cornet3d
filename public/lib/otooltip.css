@@ -1,0 +1,10 @@
+div.tooltip {
+  padding: 6px;
+  border: 1px black solid;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  z-index: 9999;
+  display: none;
+  background-color:rgba(0,0,0,0.35);
+  color:white;
+}

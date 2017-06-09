@@ -1,0 +1,620 @@
+
+        <!-- ============================================================= -->
+        <!-- Game Controls                                      -->
+        <!-- ============================================================= -->          
+        <div id='sliderHider' 
+             class="sliderHider" 
+             style='display:none; text-align:center;'>
+            <div class="sliderTitleBar">Game Controls<img id="GC_CloseBtn" class="closeBtn" src="icons/closeBtn.png"/></div>
+            <div class="slidersTableContainer">
+                                    <div class="controlTableRow">
+                                        <div id="gameControllerNodeDiv">
+                                        </div>
+                    </div>
+                <div class="controlTable" > 
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">MOD:</div>
+		        <div class="controlTableCol2">
+						<select id='mod_ctrl' title="Select a modulation scheme" style='width:100%'>
+                                                  <option value="-1"></option>
+						  <option value="41">OOK</option>
+						  <option value="39">BPSK</option>
+						  <option selected="selected" value="40">QPSK</option>
+						  <option value="3">8PSK</option>
+						  <option value="4">16PSK</option>
+						  <option value="5">32PSK</option>
+						  <option value="6">64PSK</option>
+						  <option value="7">128PSK</option>
+						  <option value="25">4QAM</option>
+						  
+						  <option value="26">8QAM</option>
+						  <option value="27">16QAM</option>
+						  <option value="28">32QAM</option>
+						  <option value="29">64QAM</option>
+						  <option value="17">2ASK</option>
+						  <option value="18">4ASK</option>
+						  <option value="19">8ASK</option>
+						  <option value="20">16ASK</option>
+						  <option value="21">32ASK</option>
+						  <option value="22">64ASK</option>
+						  <option value="23">128ASK</option>
+						</select>
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">CRC:</div>
+                        <div class="controlTableCol2">
+						<select id='crc_ctrl' title="Select a cyclic redundancy check for packet" style='width:100%'>
+                                                  <option value="-1"></option>
+						  <option value="1">none</option>
+						  <option value="2">checksum</option>
+						  <option value="3">8</option>
+						  <option value="4">16</option>
+						  <option value="5">24</option>
+						  <option selected="selected" value="6">32</option>
+						</select> 
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">IFEC:</div>
+                        <div class="controlTableCol2">
+						<select id='ifec_ctrl' title="Select an INNER forward error correction scheme" style='width:100%'>
+                                                  <option value="-1"></option>
+						  <option value="1">none</option>
+						  <option value="4">Hamming (7, 4)</option>
+						  <option value="6">Hamming (12, 8)</option>
+						  <option value="7">Golay (24, 12)</option>
+						  <option value="8">SEC-DED (22, 16)</option>
+						  <option value="9">SEC-DED (39, 32)</option>
+						  <option value="10">SEC-DED (72, 64)</option>
+						  
+						  <option value="11">CONV-V27</option>
+						  
+						  <option selected="selected" value="12">CONV-V29</option>
+						  <option value="13">CONV-V39</option>
+						  
+						  <option value="14">CONV-V615</option>
+						</select>
+                        </div>
+                    </div>                    
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">OFEC:</div>
+                        <div class="controlTableCol2">
+						<select id='ofec_ctrl' title="Select an OUTER forward error correction scheme" style='width:100%'>
+                                                  <option value="-1"></option>
+						  <option selected="selected" value="1">none</option>
+						  <option value="4">Hamming (7, 4)</option>
+						  <option value="6">Hamming (12, 8)</option>
+						  <option value="7">Golay (24, 12)</option>
+						  <option value="8">SEC-DED (22, 16)</option>
+						  <option value="9">SEC-DED (39, 32)</option>
+						  <option value="10">SEC-DED (72, 64)</option>
+						  
+						  <option value="11">CONV-V27</option>
+						  
+						  <option value="12">CONV-V29</option>
+						  <option value="13">CONV-V39</option>
+						  
+						  <option value="14">CONV-V615</option>
+						</select>
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">FREQUENCY:</div>
+                        <div class="controlTableCol2">                    
+  			<input id='freq_input' size='8' value='770' style='text-align:center'/> MHz
+                        </div>
+                    </div>
+                    <div class="controlTableRow"> 
+                        <div class="controlTableCol1">BANDWIDTH:</div>
+                        <div class="controlTableCol2">                    
+  			<input id='bandwidth_input' size='8' value='1' style='text-align:center'/> MHz
+                        </div>
+                    </div>                    
+            </div>
+                
+            <!-- ===================== GAIN CONTROL ============================== -->
+	    <div id="gainSlider" 
+                 class='sliderDiv' 
+                 style="width: 100%;" 
+                 title="Gain. Tx Gain applied to baseband signal before it is sent to USRP in dB. Should always be a float. Any float value is possible but beware that the USRP only accepts sample values between -1.0 and 1.0 so don't make it too large. Currently only applicable when using USRPs.">
+              <div style="margin-top: 5px; height: 64px; vertical-align: middle;">
+                <img id='icon-power' alt="icon for power" width='30' height='40' 
+                     style='display: block; vertical-align: middle; margin: auto' src='icons/lightning.png' />
+              </div>
+              <div id="amount-power" class='sliderLabel' style="display:inline-block;">20</div>
+	      <div class='sliderLabel' style="display:inline-block;">dB</div>
+	      <div id="slider-power" style="display: block; margin-top: 10px; margin-left: auto; margin-right: auto;"></div>
+	    </div>
+            
+            <!-- ================================================================= -->
+				<div class='sliderDiv' 
+                                     style="display:none;"
+                                     title='Length of payload in bytes.  Can be any non-negative integer (within limits of unsigned int)'>
+					<img id='icon-packet' alt="icon for packet" width='36' height='36' style='display: block; margin-left: auto; margin-right: auto;' src='icons/packet.png'/>
+
+						<div id="amount-packet" class='sliderLabel'>25</div>
+						<div class='sliderLabel'>
+							bytes
+						</div>
+
+					<div id="slider-packet" style="display: block; margin-left: auto; margin-right: auto; height:200px;"></div>
+				</div>
+				<div class='sliderDiv' 
+                                     style="display:none;" 
+                                     title='Delay between sending of each frame. In miliseconds. Must be an int.'>
+					<img id='icon-delay' alt="icon for delay" width='30' height='40' style='display: block; margin-left: auto; margin-right: auto;' src='icons/delay.png'/>
+						<div id="amount-delay" class='sliderLabel'>1000</div>
+						<div class='sliderLabel'>
+							milisec
+						</div>
+
+					<div id="slider-delay" style="display: block; margin-left: auto; margin-right: auto; height:200px;"></div>
+					
+				</div>
+            
+             <input id="updateGameControls" 
+                    type="button" 
+                    class="tutorialUpdate_button" 
+                    onclick="UpdateGameControllerModel(); LaunchTutorial();"
+                    style="position: absolute; bottom: 5px; left: 70px; display:inline-block;" 
+                    title="click here to update game parameters" 
+                    value="Update" />
+          
+			</div>
+        </div>
+                </div>
+			
+			
+		<div id='scoreArea' title="Score" style='display:none; margin-top:20px;'>
+		  <div style="border:0; color:#f6931f; font-size:32px; font-weight:bold; display:inline-block" id='scoreDiv'>0000</div>
+                  <img alt="" style='vertical-align: sub;' src='icons/Coin.png' width='36' height='36' />
+                </div>
+
+<!--  ============================================================================
+//  BEGIN.  Tool Bar / Menu 
+// ============================================================================-->
+		<div class="overlayButton">
+                    <div class="helpButtonContainer">
+                        <button id="help_button" class="right_button" title='Help'>?</button>
+                    </div>                    
+                    <div id="speedButtonContainer" class="speedButtonContainer" style="display:none;">
+			<button id='transmit_button' class='right_button' disabled='disabled' title="Transmit" style='display:none'>
+				<img alt="" src='icons/transmitOff.png' width='32' height='32' style='margin:-7px'/>
+			</button>
+			<button id='rand_button' class='right_button' style='display:none' title="Toggle real/random spectal data">
+				<img alt="" src='icons/RandOff.png' width='38' height='38'/>
+			</button>
+			<button id='settings_button' class='right_button' title="Set center frequency, bandwidth, and the number of FFT bins">
+				<img alt="" src='icons/settings.png' width='38' height='38'/>
+			</button>
+			<button id='waterfall_button' class='right_button' title="Visualize spectrum using a waterfall heatmap plot">
+				<img alt="" src='icons/waterfall.png' width='38' height='38'/>
+			</button>
+			<button id='graph_button' class='right_button' title="Visualize spectrum using a line graph">
+				<img alt="" src='icons/graph4.png' width='38' height='38'/>
+			</button>
+			<button id='users_button' class='right_button' title="Display the Users">
+				<img alt="" src='icons/users.png' width='38' height='38' style='margin:-10px'/>
+			</button>
+			<button id='metrics_button' class='right_button' title="Performance metrics">
+				<img alt="" src='icons/metrics.png' width='38' height='38' style='margin:-10px;'/>
+			</button>
+                    </div>
+                    <div id="speedButtonContainer2" class="speedButtonContainer2" style="display:none;">
+                        <button id='game_button' class='right_button' title="Show/hide game controls">
+				<img alt="" src='icons/GameControllerOff.png' style="width:38px; height:38px;"/>
+			</button>
+                    </div>
+                   <div id="tutorialButtonContainer" class="tutorialButtonContainer" style="display:none">
+                       			
+			<div style="background-color: white; display:inline; font-size:16px; padding: 10px; display:none; ">
+				<input type="checkbox" id="slow_conn_checkbox" name="slow_connections" value="slow_connections" style="width:20px; height:20px; vertical-align:middle;"/>
+				<label for="slow_conn_checkbox" style="vertical-align:middle;">Remove 3D drawing</label>
+			</div>
+                        &nbsp;
+                        <!--  =============================================================================================        --> 
+			<!-- <div style="background-color: white; display:inline; font-size:16px; padding: 10px; display: none;">  -->
+			<!-- 	<label for="tx_node_crts" style="vertical-align:middle;">Transmitter node for CRTS</label>         -->
+			<!-- 	<select id='tx_node_crts_options' title="Select a transmitter node for CRTS"></select>             -->
+			<!-- </div>                                                                                                -->
+			<!-- &nbsp;                                                                                                -->
+			<!-- <div style="background-color: white; display:inline; font-size:16px; padding: 10px; display: none;">  -->
+			<!-- 	<label for="rx_node_crts" style="vertical-align:middle;">Receiver node for CRTS</label>            -->
+			<!--	<select id='rx_node_crts_options' title="Select a receiver node for CRTS" ></select>               --> 
+			<!-- </div>                                                                                                -->
+			<!--  =============================================================================================        --> 
+			<button id="launch_crts_button"
+				class="tutorial_button"
+				style="display:none"
+                                title="Click here to launch the CRTS demo">
+                            Launch CRTS Demo
+                        </button>
+                        <input id="launch_tutorials" type="button" 
+                               class="tutorial_button" 
+                               title="click here to launch a tutorial" 
+				style="display:none"
+                               value="Tutorials" />
+                        <input id="launch_scoreboard" type="button" 
+                               onclick="spectrum.launchScoreboard();"                               
+                               class="scoreboard_button" 
+                               title="click here to launch the scoreboard"
+                               value="Scoreboard" />                        
+                        <input id="exitTutorialBtn" type="button" 
+                               onclick="corStatus.showFloors();"
+                               class="exit_button" 
+                               title="click here to exit a tutorial" value="Exit" />
+                        <div style="background-color: #A9A9A9; display:inline; font-size:12px; padding: 10px;">
+                        <label for="throughput_checkbox" style="vertical-align:middle;">Throughput graphs</label>
+                        <input type="checkbox" id="launch_Throughput_graphs" name="Throughput_graphs" value="Throughput_graphs" style="width:20px; height:20px; vertical-align:middle;"/>
+			
+                        </div>	
+
+                                 </div>
+                    
+
+
+                                
+		
+                    <div class="fullScreenButtonContainer">
+		      <button id='fullscr_button' class="left_button" onclick="corStatus.goFullscreen();" title="Fullscreen">
+			  <img alt="" src='icons/full-screen.png' width='24' height='24' style='margin-top:2px;' />
+		      </button>
+                    </div>
+                </div>
+<!-- ============================================================================
+//  END.  Tool Bar / Menu 
+// ============================================================================ -->
+
+                <div id='statusBox' style="z-index: 20; background-color: red;">
+			Status: OK
+		</div>
+			
+		<div id="graph_dialog" class="window_div" title="Please select a node for real-time spectrum sensing" style='margin-top:2px;padding:0px'>
+			<canvas id='cvs' style="z-index: 0;"></canvas>
+ 			<canvas id="layer2" style="z-index: 200; cursor:crosshair;"></canvas>
+		</div>
+		<div id="metrics_dialog" class="window_div" title="Simulated Performance Metrics" style='margin-top:2px;padding:0px'>
+			<table class='table1' id='metrics_table'>
+				
+			</table>
+		</div>
+		<div id="waterfall_dialog" class="window_div" title="Please select a node for real-time spectrum sensing" style='margin-top:2px;padding:0px'>
+			<div id="heatmapArea" style='width:100%;height:100%'></div>
+		</div>
+		<div id="help_dialog" class="window_div" title="Help">
+			<div class="section" id="camera-navigation">
+				<h1>Spectral Games</h1>
+				<h3><em>Powered by CRTS, Cognitive Radio Test System</em></h3>
+				<ol class="simple">
+					<li>Select node</li>
+					<li>Optional:  change spectrum sensing parameters</li>
+					<li>Click line graph button</li>
+					<li>Drag to select band</li>
+					<li>Click game button</li>
+					<li>Click transmit button</li>
+					<li>Click metrics button</li>
+					<li>If desired, click transmit button to stop transmitting, change transmission parameters, click transmit button again to restart</li>
+				</ol>
+				<h1>Node Color Legend</h1>
+				<p>Green:  uhd_find_devices succeeds on the node.  This implies that the software radio functions.</p>
+				<p>Olive:  uhd_find_devices fails on the node.  This implies that the software radio does not function.</p>
+				<p>Red:  node cannot be reached over SSH.</p>
+				<h1>Spectrum Sensing</h1>
+				<p>Settings can be adjusted by clicking on the gear icon.</p>
+				<p>Clicking a green node starts specrum sensing and visualization.</p>
+				<h1>Camera Navigation</h1>
+				<p>X3DOM provides some generic interaction and navigation methods. Interactive objects will be handled by HTML-like
+					events. Navigation can be user-defined or controlled by specific predefined modes.</p>
+				<p>Currently X3DOM supports the following interactive navigation modes:</p>
+				<ul class="simple">
+					<li>Examine</li>
+					<li>Walk</li>
+					<li>Fly</li>
+					<li>Look-at</li>
+					<li>Look-around</li>
+					<li>Game</li>
+					<li>Helicopter</li>
+				</ul>
+				<p>Non-Interactive movement encompasses the functionality of:</p>
+				<ul class="simple">
+					<li>Resetting a view</li>
+					<li>Showing all</li>
+					<li>Upright view</li>
+				</ul>
+				<div class="section" id="interactive-camera-movement">
+					<h2>Interactive camera movement</h2>
+					<h3>Examine</h3>
+					<p>Activate this mode by pressing the <span class="docutils literal"><span class="pre">&quot;e&quot;</span></span> key.</p>
+					<table
+					class='gradient-table'>
+						<colgroup>
+							<col width="44%" />
+							<col width="56%" />
+						</colgroup>
+						<thead valign="bottom">
+							<tr>
+								<th class="head">Function</th>
+								<th class="head">Mouse Button</th>
+							</tr>
+						</thead>
+						<tbody valign="top">
+							<tr>
+								<td>Rotate</td>
+								<td>Left / Left + Shift</td>
+							</tr>
+							<tr>
+								<td>Pan</td>
+								<td>Mid / Left + Ctrl</td>
+							</tr>
+							<tr>
+								<td>Zoom</td>
+								<td>Right / Wheel / Left + Alt</td>
+							</tr>
+							<tr>
+								<td>Set center of rotation</td>
+								<td>Double-click left</td>
+							</tr>
+						</tbody>
+						</table>
+						<h3>Walk</h3>
+						<p>Activate this mode by pressing the <tt class="docutils literal"><span class="pre">&quot;w&quot;</span></tt> key.</p>
+						<table
+						class='gradient-table'>
+							<colgroup>
+								<col width="44%" />
+								<col width="56%" />
+							</colgroup>
+							<thead valign="bottom">
+								<tr>
+									<th class="head">Function</th>
+									<th class="head">Mouse Button</th>
+								</tr>
+							</thead>
+							<tbody valign="top">
+								<tr>
+									<td>Move forward</td>
+									<td>Left</td>
+								</tr>
+								<tr>
+									<td>Move backward</td>
+									<td>Right</td>
+								</tr>
+							</tbody>
+							</table>
+							<div class="section" id="fly">
+								<h3>Fly</h3>
+								<p>Activate this mode by pressing the <tt class="docutils literal"><span class="pre">&quot;f&quot;</span></tt> key.</p>
+								<table
+								class='gradient-table'>
+									<colgroup>
+										<col width="44%" />
+										<col width="56%" />
+									</colgroup>
+									<thead valign="bottom">
+										<tr>
+											<th class="head">Function</th>
+											<th class="head">Mouse Button</th>
+										</tr>
+									</thead>
+									<tbody valign="top">
+										<tr>
+											<td>Move forward</td>
+											<td>Left</td>
+										</tr>
+										<tr>
+											<td>Move backward</td>
+											<td>Right</td>
+										</tr>
+									</tbody>
+									</table>
+							</div>
+							<div class="section" id="helicopter">
+								<h3>Helicopter</h3>
+								<p>Activate this mode by pressing the <tt class="docutils literal"><span class="pre">&quot;h&quot;</span></tt> key.</p>
+								<p>To look downwards/upwards and to move higher/lower use the keys (8/9 and 6/7).</p>
+								<table class='gradient-table'>
+									<colgroup>
+										<col width="44%" />
+										<col width="56%" />
+									</colgroup>
+									<thead valign="bottom">
+										<tr>
+											<th class="head">Function</th>
+											<th class="head">Mouse Button</th>
+										</tr>
+									</thead>
+									<tbody valign="top">
+										<tr>
+											<td>Move forward</td>
+											<td>Left</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="section" id="look-at">
+								<h3>Look at</h3>
+								<p>Activate this mode by pressing the <tt class="docutils literal"><span class="pre">&quot;l&quot;</span></tt> key.</p>
+								<table
+								class='gradient-table'>
+									<colgroup>
+										<col width="44%" />
+										<col width="56%" />
+									</colgroup>
+									<thead valign="bottom">
+										<tr>
+											<th class="head">Function</th>
+											<th class="head">Mouse Button</th>
+										</tr>
+									</thead>
+									<tbody valign="top">
+										<tr>
+											<td>Move in</td>
+											<td>Left</td>
+										</tr>
+										<tr>
+											<td>Move out</td>
+											<td>Right</td>
+										</tr>
+									</tbody>
+									</table>
+							</div>
+							<div class="section" id="game">
+								<h3>Game</h3>
+								<p>Activate this mode by pressing the <tt class="docutils literal"><span class="pre">&quot;g&quot;</span></tt> key.</p>
+								<p>To look around (rotate view) move the mouse.</p>
+								<table class='gradient-table'>
+									<colgroup>
+										<col width="44%" />
+										<col width="56%" />
+									</colgroup>
+									<thead valign="bottom">
+										<tr>
+											<th class="head">Function</th>
+											<th class="head">Key</th>
+										</tr>
+									</thead>
+									<tbody valign="top">
+										<tr>
+											<td>Move forward</td>
+											<td>Cursor up</td>
+										</tr>
+										<tr>
+											<td>Move backward</td>
+											<td>Cursor down</td>
+										</tr>
+										<tr>
+											<td>Strafe Left</td>
+											<td>Cursor left</td>
+										</tr>
+										<tr>
+											<td>Strafe Right</td>
+											<td>Cursor right</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+				</div>
+				<div class="section" id="non-interactive-camera-movement">
+					<h2>Non-interactive camera movement</h2>
+					<table class='gradient-table'>
+						<colgroup>
+							<col width="44%" />
+							<col width="56%" />
+						</colgroup>
+						<thead valign="bottom">
+							<tr>
+								<th class="head">Function</th>
+								<th class="head">Key</th>
+							</tr>
+						</thead>
+						<tbody valign="top">
+							<tr>
+								<td>Reset view</td>
+								<td>r</td>
+							</tr>
+							<tr>
+								<td>Show all</td>
+								<td>a</td>
+							</tr>
+							<tr>
+								<td>Upright</td>
+								<td>u</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+<!-- ================================================================= -->
+<!--the following divs are used for the throughput graph -->
+ <div id="container">  
+      <div id="containera">
+          <div id="left" title="node_0"></div>
+          <div id="right" title="node_1"></div>
+      </div>
+      <div id="containerb">
+          <div id="leftb" title="node_2"></div>
+          <div id="rightb" title="node_3"></div>
+      </div>
+ </div>
+<div id="Teams_container">
+          <div id="leftt" title="team A"></div>
+          <div id="rightt" title="team B"></div>
+          <div id="leftb_team" title="teams A & B"></div>
+          <div id="rightb_team" title="teams A & B Scores"></div>
+         
+</div>
+<!-- ================================================================= -->
+<!--  HTML below is used for the Tutorial Module                       -->
+<!--  Each div Represents a pop dialog window                          -->
+<!-- ================================================================= -->
+  <div id="FatalErrorPopUp" style="text-align: left; display:none;">
+      <h3>An error has occurred in the Tutorial module</h3>
+      <div id="errorMsg">
+      </div>
+  </div>
+  <div id="SelectTutorialPopUp" style="text-align: center; display:none;">
+    <div class="tutorialContainer">    
+      <h3 style="text-align: left;">Step 1.  Select A Tutorial</h3>
+      <i>Please select a tutorial from the list below</i>
+     <div id="tutorialList" style="margin:auto;">
+     </div>
+    </div>      
+  </div>
+  <div id="DisplayTutorialDescriptionPopUp" style="text-align: center; display:none;">
+      <div class="tutorialContainer">
+        <h3 style="text-align: left;">Step 2.  Tutorial Description</h3>
+        <div id="theTutorialDescription" ></div>
+        <div id="descSlideControlBar" >
+            <button id="prevBtn" class="descSlideButton" onclick="DisplayPrevDescSlide();">prev</button>
+            <div id="SlideCounterText">Description slide x of y</div>
+            <button id="nextBtn" class="descSlideButton" onclick="DisplayNextDescSlide();">next</button>
+        </div>
+        <button id="continueToNodeSelection" class="continueButton" onclick="SelectANode();" style="visibility: hidden;">continue to node selection</button>
+        <div style="clear:both;"></div>
+      </div>
+  </div>
+  <div id="SelectTutorialNodes" style="text-align: center; display:none;">
+    <div class="tutorialContainer">
+      <h3 style="text-align: left;">Step 3.  Tutorial Node Association</h3> 
+      <button id="rescanNodesBtn"  
+              class="continueButton" 
+              style="margin-bottom: 20px;"
+              onclick="RescanNodes();">Re-scan nodes for availability</button>
+      <div id="displayLoading" class="displayLoading" style="display:none">
+          Loading...please be patient<br />
+          <img src="icons/loading_spinner.gif" style="width: 75px; height: 75px;" alt="loading" /> 
+      </div>
+      <div id="selectNodeTable" class="selectNodeTable">
+        <div id="SelectTransmitterNodes" class="nodeList">
+        </div>
+        <div id="SelectReceiverNodes" class="nodeList">
+        </div>
+        <div id="SelectTransceiverNodes" class="nodeList">
+        </div>
+        <div id="SelectInterfererNodes" class="nodeList">
+        </div>
+      </div>
+      <button style="display:none;" id="continueToSubmission"  class="continueButton" onclick="LaunchTutorial();">launch the tutorial</button>
+    </div>
+  </div>
+<!-- ================================================================= -->
+<!-- ================================================================= -->
+        <!-- ============================================================= -->
+        <!--  Performance metrics                                          -->
+        <!-- ============================================================= -->
+        <div id="performanceMetricDiv" class="performanceMetricDiv" style="display:none;">
+          <div class="PM_Title">Performance Metrics<img id="PM_CloseBtn" class="closeBtn" src="icons/closeBtn.png"/></div>
+          <div class="PM_Row  PM_border">
+            <div class="PM_Label">Packet Error Rate (PER):</div>
+            <div id="pmDataPER" class="PM_Data">0.99999</div>
+          </div>
+          <div class="PM_Row">
+            <div class="PM_Label">Throughput (kbps):</div>
+            <div id="pmDataT" class="PM_Data">1,000,000</div>
+          </div>
+        </div>
+
+  </body>
+</html>

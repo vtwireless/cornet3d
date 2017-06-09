@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Stupid jquery did not distribute the following image
+# files with jquery-ui.js
+
+. ../download.bash
+
+# Usage: Download target url [sha512sum]
+
+# We found this URL for all the images.
+pre=https://raw.githubusercontent.com/julienw/jquery-trap-input\
+/dc7d2be616e755425b13b15b3f5b31fdd034a998/lib/jquery/themes/base/images/
+
+files="ui-bg_flat_0_aaaaaa_40x100.png\
+ ui-bg_flat_75_ffffff_40x100.png\
+ ui-bg_glass_55_fbf9ee_1x400.png\
+ ui-bg_glass_65_ffffff_1x400.png\
+ ui-bg_glass_75_dadada_1x400.png\
+ ui-bg_glass_75_e6e6e6_1x400.png\
+ ui-bg_glass_95_fef1ec_1x400.png\
+ ui-bg_highlight-soft_75_cccccc_1x100.png\
+ ui-icons_222222_256x240.png\
+ ui-icons_2e83ff_256x240.png\
+ ui-icons_454545_256x240.png\
+ ui-icons_888888_256x240.png\
+ ui-icons_cd0a0a_256x240.png"
+
+set -e
+mkdir images
+
+set +e
+
+for i in $files ; do
+    if ! Download images/$i $pre/$i ; then
+        rm -rf images/
+        exit 1
+    fi
+done
+
+set -xe
+# check that we got the correct files
+sha512sum -c images.sha512

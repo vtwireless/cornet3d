@@ -1,0 +1,572 @@
+/* 
+    Created on : Apr 22, 2016, 3:51:43 PM
+    Author     : gkelley
+*/
+
+        html{width:100%;height:100%;margin:0;padding:0;}
+        body{width:100%;height:100%;margin:0;padding:0px;overflow:hidden;}
+            
+        .overlayButton {
+		position: fixed;
+                display: block; 
+		bottom: 0px;
+                width: 100%;                            
+		z-index: 10;
+                height: 45px;
+                padding: 5px; 
+                background-color: #666; 
+                border: none; 
+                border-top: 1px solid #ccc; 
+                }
+            
+        .speedButtonContainer {
+                float: left; 
+                display: block; 
+                width: 225px;                            
+                height: 45px;
+                padding: 0; 
+                padding-left: 10px; 
+                margin: 0; 
+                border: none; 
+                border-right: 1px solid #ccc; 
+                }
+        .speedButtonContainer2 {
+                float: left; 
+                display: block; 
+                width: 55px;                            
+                height: 45px;
+                padding: 0; 
+                padding-left: 10px; 
+                margin: 0; 
+                border: none; 
+                border-right: 1px solid #ccc; 
+                }                
+        .helpButtonContainer {
+                float: left; 
+                display: block; 
+                width: 60px;                            
+                height: 45px;
+                padding: 0; 
+                margin: 0; 
+                border: none; 
+                border-right: 1px solid #ccc; 
+                }
+        .fullScreenButtonContainer {
+                float: right; 
+                display: block; 
+                width: 60px;                            
+                height: 45px;
+                padding: 0; 
+                padding-left: 10px;
+                margin: 0; 
+                border: none; 
+                border-left: 1px solid #ccc; 
+                }
+                
+        .tutorialButtonContainer {
+                float: left; 
+                display: block; 
+                width: 700px;                            
+                height: 45px;
+                padding: 0; 
+                margin-top: 3px; 
+                border: none; 
+                }                
+                        
+	#scoreArea {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		z-index: 10;
+		padding: 3px;
+		}
+                        
+	#statusBox {
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		z-index: 99999;
+		padding: 3px;
+		color:green;
+		font-size: 20px;
+		font-weight: 900;
+		display:none;
+                }
+	.semiTransparentWind {
+		opacity: 0.9;
+		}
+                
+	.window_div{
+		padding-right:4px;
+		padding-left:16px;
+		border-width:2px;
+		}
+                        
+        #help_button{
+		font-family: "Charcoal", Sans-Serif;
+		font-size: 20px;
+		color: white;
+		font-weight: bold;
+                margin-left: 10px; 
+                margin-right: 10px; 
+		}
+                
+                    
+	.right_button{
+		width: 38px;
+		height: 38px;
+		padding: 0;
+                margin: 0; 
+                margin-top: 3px; 
+                margin-left: 2px; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+		}
+                
+	.left_button{
+		width: 38px;
+		height: 38px;
+		padding: 0;
+                margin: 0; 
+                margin-top: 3px; 
+                margin-right: 2px; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+		}                
+                
+        .tutorialUpdate_button {
+                background-image: url('icons/update.png'); 
+                background-repeat: no-repeat; 
+		height: 38px;
+                width: 152px; 
+		padding: 0;
+                padding-left: 42px; 
+                padding-right: 5px; 
+                margin: 0; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+                }
+
+        .tutorial_button{
+                background-image: url('icons/tutorial-icon.png'); 
+                background-repeat: no-repeat; 
+		height: 38px;
+                width: 152px; 
+		padding: 0;
+                padding-left: 42px; 
+                padding-right: 5px; 
+                margin: 0; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+		}  
+                
+        .scoreboard_button{
+                background-image: url('icons/scoreboard-icon.png'); 
+                background-repeat: no-repeat; 
+		height: 38px;
+                width: 152px; 
+		padding: 0;
+                padding-left: 42px; 
+                padding-right: 5px; 
+                margin: 0; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+		}                  
+                
+        .exit_button{
+                background-image: url('icons/exit.png'); 
+                background-repeat: no-repeat; 
+		height: 38px;
+                width: 152px; 
+		padding: 0;
+                padding-left: 42px; 
+                padding-right: 5px; 
+                margin: 0; 
+                border: 1px solid black; 
+                vertical-align: middle; 
+		overflow:hidden;
+                cursor: pointer; 
+		}                 
+   
+        .scoreboard_button img, 
+        .exit_button img, 
+        .tutorial_button img {
+                padding:0; 
+                margin:0;
+                border: none; 
+                }
+                        
+        .right_button img {
+                padding:0; 
+                margin:0;
+                margin-top: -2px;
+                border: none; 
+                }
+                
+        .left_button img {
+                padding:0; 
+                margin:0;
+                border: none; 
+                }                
+                        
+                       
+	#slidersContainer{
+		left:18px;
+		position: fixed;
+		bottom: 60px;
+		z-index: 20;
+		margin-left: -16px;
+                height: 450px;
+		}
+                
+	svg, canvas {
+		position: absolute;
+		}
+                
+	.axis text {
+                font-size: 14px;
+		font-weight: bold;
+                }
+                
+	.axis path,
+	.axis line {
+	        fill: none;
+		stroke: #fff;
+		shape-rendering: crispEdges;
+		stroke-width: 2;
+                }
+        
+	.axis path {
+	        display: none;
+		}
+                
+	.legendText {
+		font-size:20px;
+		font-family:"Arial, sans-serif";
+		font-weight: bold;
+		}
+                
+                
+               
+    .sliderHider {
+        position: relative; 
+        float: left; 
+        margin-left: 5px; 
+        display: inline-block; 
+        color:#39AFCE; 
+        background-color:white;
+        border:  2px solid #39AFCE; 
+        width: 300px;
+        height: 448px;         
+        }
+        
+    .sliderTitleBar {
+        display: block;
+        width: 100%; 
+        background-color: #39AFCE;
+        color: white; 
+        height: 21px;
+        padding-top: 3px;
+        font-weight: bold; 
+        position: relative; 
+        }
+        
+    .slidersTableContainer {
+        display: block;
+        padding: 10px; 
+        height: 130px;
+        }
+	.sliderLabel{
+		text-align:center;
+		color:red;
+		font-weight:bold;
+		}
+                
+    .settingsDiv {
+        float: left; 
+        position: relative; 
+        margin-left: 5px; 
+        display:  inline-block; 
+        color:#7DB90B; 
+        background-color:white;
+        border:  2px solid #7DB90B; 
+        width: 300px;
+        height: 448px; 
+        }
+        
+    .settingsTitleBar {
+        display: block;
+        width: 100%; 
+        background-color: #7DB90B;
+        color: white; 
+        height: 21px;
+        padding-top: 3px; 
+        font-weight: bold; 
+        position: relative; 
+        }        
+     
+               
+	select {
+		font-family:serif;
+		opacity: 0.8;
+		}
+      
+        .continueButton, 
+        .tutorialSelectButton {
+             display: block;
+             width: 100%;
+             height: 23px;
+             border: 1px solid black;
+             background: white; 
+             color: black;
+             margin-top: 5px; 
+             cursor: pointer; 
+                }
+        .continueButton {
+             margin-top: 12px; 
+            }
+        .continueButton:hover, 
+        .tutorialSelectButton:hover {
+             border: 1px solid black;
+             color: white;
+             background-color: black; 
+        }
+        
+        #descSlideControlBar{
+            display: block;
+            width: 100%;
+            height: 23px;
+            color: black;
+            margin-top: 5px;  
+            padding-top: 5px; 
+            border: none;
+            border-top: 1px solid black; 
+        }
+        #theTutorialDescription{
+            display: block;
+            height: 375px; 
+        }
+        .descSlideButton{
+             display: inline-block;
+             width: 50px;
+             height: 23px;
+             border: 1px solid black;
+             color: black;
+             margin-top: 5px; 
+             cursor: pointer;             
+        }
+        .descSlideButton:hover {
+             border: 1px solid black;
+             color: white;
+             background-color: black; 
+        }
+        .selectNodeTable {
+            background-color: #CCFFFF;
+            height: 350px; 
+        }
+        #SlideCounterText {
+            display: inline-block;
+            width: 50%
+        }
+        
+        .nodeList {
+            display: block;
+            margin-top: 5px; 
+        }
+        .selectNodeRow {
+             text-align: left; 
+             display: block;
+             width: 100%;
+             border: none;
+             line-height: 17px;
+             border-top: 1px solid #ccc;
+             color: black;
+        }
+
+        .selectNodeRowHeader {
+            text-align: left; 
+            font-weight: bold; 
+            display: block;
+            width: 100%;
+            border: none;
+            line-height: 23px;
+            color: white;
+            background-color: #333; 
+        }
+        
+        .nodeIdColumn,
+        .nodeRoleColumn,
+        .nodeActualColumn {
+            text-align: left; 
+            display: inline-block;
+            width: 80px; 
+            margin: 0;
+            margin-top: 5px; 
+            margin-right: 5px;             
+            padding: 0; 
+            padding-left: 5px; 
+            border-right: 1px solid #ccc; 
+        }
+        .nodeActualColumn {
+           border-right: none; 
+           width: 370px; 
+        }
+        
+        
+        .controlTable {
+            display: block; 
+            margin: 0;
+            padding: 0; 
+            padding-bottom: 10px; 
+            border-bottom:  1px solid black; 
+            margin-bottom: 10px; 
+            padding-top: 10px;
+            border-top:  1px solid black;
+            margin-top: 10px;
+            height: 150px; 
+        }
+        .controlTableRow {
+            display: block;
+            height: 26px; 
+            line-height: 26px; 
+        }        
+         .controlTableCol1 {
+            display: inline-block;
+            width:  30%; 
+            text-align: right;
+            margin-right: 5px; 
+        }        
+         .controlTableCol2 {
+            width: 50%;
+            display: inline-block;
+            text-align: left;
+        }        
+
+        optgroup {
+            padding-top: 3px; 
+            color: #336633; 
+            text-align: center;
+            
+        }
+        
+        #SelectTutorialPopUp,
+        #DisplayTutorialDescriptionPopUp, 
+        #SelectTutorialNodes {
+            background-color: #CCFFFF; 
+            font-family: Arial, sans-serif; 
+            width: 100%; 
+        }
+        
+        .tutorialContainer {
+            display: block;
+            margin: 0px;
+            padding: 5px; 
+            height: 500px;
+        }
+        
+        .tutorialContainer h3 {
+            font-family: Arial, sans-serif;
+        }
+        
+        .tutorialDialog {
+            border: 2px solid black; 
+            border-radius: 0px;
+            background-color: #CCFFFF; 
+            font-family: Arial, sans-serif; 
+            padding: 0px; 
+            height: 512px; 
+            width: 100%; 
+        }
+        
+        
+        #SelectTutorialNodes {
+          background-color: #CCFFFF;  
+        }
+        
+        .tutorialDialog .ui-corner-tl {
+            border-top-left-radius: 4px;
+        }
+        
+        .closeBtn {
+            position: absolute;
+            right: 2px;
+            top: 2px; 
+            width: 15px;
+            height: 15px; 
+            border: 1px solid black; 
+        }
+        
+        .tutorialNodeSelect, 
+        .nodeCheckMark {
+            display: inline-block; 
+            margin-right: 5px; 
+        }
+        
+        .displayLoading {
+            display: block;
+            height: 100px; 
+            background-color: white;
+            text-align: center; 
+        }
+        
+        .performanceMetricDiv {
+            position: absolute; 
+            top: 35px; 
+            left:10px; 
+            display: block;
+            height:  65px;
+            line-height: 1.5em;
+            width: 215px; 
+            background-color: white; 
+            border: 2px solid #50B0D0; 
+        }   
+        
+        .PM_Title {
+            display: block; 
+            width: 100%;
+            text-align: center; 
+            font-size: 1.1em; 
+            font-weight: bold;
+            color: white;
+            background-color: #50B0D0;
+            margin-bottom: 5px; 
+            height: 21px;
+            padding-top: 3px; 
+            font-weight: bold; 
+            position: relative; 
+        }
+        
+        .PM_Row {
+            display: block;
+            margin:0; 
+       }
+        
+        .PM_border {
+            border-bottom: 1px solid #dcdcdc; 
+        }
+        
+        .PM_Label {
+            display: inline-block;
+            width: 70%;
+            margin-right: 5px; 
+            text-align: right; 
+            color: #666666; 
+        }
+        
+        .PM_Data {
+            display: inline-block;
+            width: 26%;
+            margin-right: 0px; 
+            text-align: right;  
+
+        }

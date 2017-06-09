@@ -1,0 +1,176 @@
+<html>
+<head>
+	<script>
+		function addScreen() {
+			var frameNo = document.getElementById("numScreens").innerHTML;
+			var table = document.getElementById("frames_buttons");
+			
+			var noRows = document.getElementById("frames_buttons").rows.length;
+			var noCellsLastRow = document.getElementById("frames_buttons").rows[noRows-1].cells.length;
+			var height = window.innerHeight * 0.5;
+			
+			if(noCellsLastRow == 1)
+			{
+				
+				var frameAdded = "\t<iframe id=\"frame-" + frameNo + "\" style=\"width: 96%;\" height="+height+"px; src=\"index.html\"></iframe>" + "\t<br><button id=\"remove-" + frameNo + "\" type=\"button\" onclick = \"removeScreen(this.id)\">Remove</button>";
+				var cellRight = document.getElementById("frames_buttons").rows[noRows-1].insertCell(1);
+				cellRight.innerHTML = frameAdded;
+				cellRight.align = "center";
+			}
+			
+			else if(noCellsLastRow == 2)
+			{
+				var frameAdded = "\t<iframe id=\"frame-" + frameNo + "\" style=\"width: 96%;\" height="+height+"px; src=\"index.html\"></iframe>" + "\t<br><button id=\"remove-" + frameNo + "\" type=\"button\" onclick = \"removeScreen(this.id)\">Remove</button>";
+				var newRow = document.getElementById("frames_buttons").insertRow(noRows);
+				var cellLeft = newRow.insertCell(0);
+				cellLeft.innerHTML = frameAdded;
+				cellLeft.align = "center";
+			}
+			
+			document.getElementById("numScreens").innerHTML = parseInt(frameNo) + 1;
+			var numScreensDisp = document.getElementById("numScreensDisplayed").innerHTML;
+			document.getElementById("numScreensDisplayed").innerHTML =  parseInt(numScreensDisp) + 1;
+			
+			console.log(document.getElementById("numScreens").innerHTML + "----" + document.getElementById("numScreensDisplayed").innerHTML);
+		}
+		
+		
+		function removeScreen(id) {
+			var removeScreenNumber = parseInt(id.split("-")[1]);
+			var table = document.getElementById("frames_buttons");
+			var noRows = table.rows.length;
+			var numScreensDisp = document.getElementById("numScreensDisplayed").innerHTML;
+			var numCellsLastRow = table.rows[noRows-1].cells.length;
+			
+			var totalNumCells = (noRows * 2) - (numCellsLastRow % 2);
+			var removeScreenId = "\"remove-" + removeScreenNumber + "\"";
+			console.log(removeScreenId);
+			var rowRemove = 0, colRemove = 0;
+			
+			for(var row = 0; row < noRows; row++)
+			{
+				for(var col = 0; col < 2; col++)
+				{
+					var currentCell = table.rows[row].cells[col].innerHTML;
+					
+					if(currentCell.includes(removeScreenId))
+					{
+						rowRemove = row;
+						colRemove = col;
+						break;
+					}
+					
+					if(row == noRows - 1 && numCellsLastRow == 1 && col == 0)
+					{
+						col = 2;
+					}
+				}
+			}
+			console.log(rowRemove);
+			console.log(colRemove);
+			
+			var counter = 0;
+			var arr = [];
+			var temp;
+			for(var row = noRows - 1; row >= rowRemove; row--)
+			{
+				for(var col = 1; col >= 0; col--)
+				{
+					if(counter == 0 && numCellsLastRow == 1)
+					{
+						col = 0;
+					}
+					temp = table.rows[row].cells[col].innerHTML;
+					arr.unshift(temp);
+					
+					counter++;
+				}
+			}
+						
+			arr.shift();
+			
+			
+			var r = noRows - 1, c = numCellsLastRow - 1;
+			if(numCellsLastRow == 1)
+			{
+				table.deleteRow(r);
+				r--;
+				c = 1;
+			}
+			else
+			{
+				table.rows[r].deleteCell(1);
+				c--;
+			}
+			
+			
+			if(arr.length != 1)	
+			{
+				for(var i = arr.length - 1; i >= 0; i--)
+				{
+					table.rows[r].cells[c].innerHTML = arr[i];
+					if(c == 0)
+					{
+						c = 1;
+						r--;
+					}
+					else if(c == 1)
+					{
+						c--;
+					}
+				}
+			}
+			
+			
+			var numScreensDisp = document.getElementById("numScreensDisplayed").innerHTML;
+			document.getElementById("numScreensDisplayed").innerHTML =  parseInt(numScreensDisp) - 1;
+			
+			console.log(removeScreenNumber);
+			
+			console.log(document.getElementById("numScreens").innerHTML + "----" + document.getElementById("numScreensDisplayed").innerHTML);
+			
+			for(var row = 0; row < noRows; row++)
+			{
+				for(var col = 0; col < 2; col++)
+				{
+					console.log(table.rows[row].cells[col].innerHTML);
+					if(row == noRows - 1 && numCellsLastRow == 1)
+						break;
+				}
+			}
+			
+			
+		}
+		
+		function expandInitialScreens() {
+			var height = window.innerHeight * 0.5;
+			var cellLeft = document.getElementById("frame-1");
+			cellLeft.height = height;
+			var cellRight = document.getElementById("frame-2");
+			cellRight.height = height;
+		}
+	</script>
+</head>
+<body onload = "expandInitialScreens()">
+	<table width=100% id="frames_buttons">
+		<tr>
+			<td align = "center">
+				<iframe id="frame-1" style="width: 96%;" src="index.html"></iframe>
+				<br>
+				<button id="remove-1" type="button" onclick = "removeScreen(this.id)">Remove</button>
+			</td>
+			<td align = "center">
+				<iframe id="frame-2" style="width: 96%;" src="index.html"></iframe>
+				<br>
+				<button id="remove-2" type="button" onclick = "removeScreen(this.id)">Remove</button>
+			</td>
+		</tr>
+	</table>
+	<br><br>
+	
+	<div id="numScreens" style="display:none;">3</div>
+	<div id="numScreensDisplayed" style="display:none;">2</div>
+	<button id="add" type="button" onclick="addScreen()">Add</button>
+	
+</body>
+</html>

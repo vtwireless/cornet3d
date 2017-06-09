@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. ../download.bash
+
+# Usage: Download target url [sha512sum]
+
+Download jquery.js\
+ "http://code.jquery.com/jquery-1.9.1.js"\
+ "d62700e7a1ff41f9d6326ca024ba2be1d391bc8fbb2aeae0f427d74837899b230940bf7\
+c2df3d193f5300a68bb3686706d4c31328234b5cda026a1bf52ef9e70"

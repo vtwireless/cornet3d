@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. ../download.bash
+
+# We are using the full version of x3dom because is has the
+# ElevationGrid node and the smaller default version does not.
+
+# TODO: Can we use a smaller release of x3dom that still has
+# the ElevationGrid node.
+
+# Usage: Download target url [sha512sum]
+Download x3dom.js\
+ "https://x3dom.org/download/1.7.2/x3dom-full.js"\
+ "25e889b8f132c2043b5268ab2ce9aae8569edc3639dadad11de646df428508c730c20bc\
+0a04013e1cb4b866c31625d3de4f70f52d7363450f592c4caa0b1cad1"

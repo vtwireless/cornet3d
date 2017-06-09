@@ -1,0 +1,175 @@
+#!/usr/bin/env python
+
+# TODO: This file must be copied to the wireless radio computer.  It is
+# run via ssh from program cornet3d_spectrumServer from the web server
+# computer.
+
+# To test this program without cornet3d_webServer
+#
+#   ./cornet3d_spectrumServer -f 751000000 -b 12000000 -n 256 -r 2 -p 4445 -a 192.168.10.2
+#
+#   nc localhost 4445
+#
+# or
+#
+#  while true ; do echo -e "\nspectrum" ; sleep 0.5 ; done | nc localhost 4445
+
+
+##################################################
+# Gnuradio Python Flow Graph
+# Title: Spectrum Sensing Nikita
+# Generated: Wed Feb 26 12:29:17 2014
+##################################################
+
+# TODO: remove stuff that is not used
+
+from gnuradio import blocks
+from gnuradio import eng_notation
+from gnuradio import fft
+from gnuradio import gr
+from gnuradio import uhd
+from gnuradio.eng_option import eng_option
+from gnuradio.fft import window
+from gnuradio.filter import firdes
+#from optparse import OptionParser
+import json
+import time
+import argparse
+#import thread
+from socket import *
+
+class spectrum_sensing_nikita(gr.top_block):
+
+    def __init__(self, center_freq, bins, bandwidth, radioAddr):
+        gr.top_block.__init__(self, "Spectrum Sensing Nikita")
+
+        ##################################################
+        # Variables
+        ##################################################
+        self.samp_rate = samp_rate = bandwidth
+        self.center_freq = center_freq
+        self.bins = bins
+        self.bandwidth = bandwidth
+
+        ##################################################
+        # Blocks
+        ##################################################
+        self.uhd_usrp_source_0 = uhd.usrp_source(
+        	device_addr = 'addr=' + radioAddr,
+        	stream_args = uhd.stream_args(
+        		cpu_format="fc32",
+        		channels=range(1)
+        	),
+        )
+        self.uhd_usrp_source_0.set_samp_rate(samp_rate)
+        self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
+        self.uhd_usrp_source_0.set_gain(20, 0)
+        self.uhd_usrp_source_0.set_bandwidth(bandwidth, 0)
+        self.fft_vxx_0 = fft.fft_vcc(bins, True, (window.blackmanharris(bins)), True, 1)
+        self.blocks_stream_to_vector_0 = blocks.stream_to_vector(gr.sizeof_gr_complex*1, bins)
+        self.blocks_probe_signal_vx_0 = blocks.probe_signal_vf(bins)
+        self.blocks_complex_to_mag_0 = blocks.complex_to_mag(bins)
+
+        ##################################################
+        # Connections
+        ##################################################
+        self.connect((self.uhd_usrp_source_0, 0), (self.blocks_stream_to_vector_0, 0))
+        self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
+        self.connect((self.fft_vxx_0, 0), (self.blocks_complex_to_mag_0, 0))
+        self.connect((self.blocks_complex_to_mag_0, 0), (self.blocks_probe_signal_vx_0, 0))
+
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+
+    def set_center_freq(self, center_freq):
+        self.center_freq = center_freq
+        self.uhd_usrp_source_0.set_center_freq(self.center_freq, 0)
+
+    def set_bins(self, bins):
+        self.bins = bins
+
+    def set_bandwidth(self, bandwidth):
+        self.bandwidth = bandwidth
+        self.uhd_usrp_source_0.set_bandwidth(self.bandwidth, 0)
+
+
+def CORNET_3D_Daemon(tcpTimeClientSock, args):
+
+    tb = spectrum_sensing_nikita(float(args['center_frequency']),
+            int(float(args['bins'])), float(args['bandwidth']),
+            args['radio_address'])
+    period=1/2.0
+    spectrumStarted = False
+    while True:
+        try:
+            # blocking recv() call
+            data = tcpTimeClientSock.recv(9600)
+            print 'Got:', data, '\n\n'
+
+            if data.startswith('parameters='):
+                params =\
+                    json.loads(data.strip().split('parameters=')[1])
+                tb = spectrum_sensing_nikita(float(params['f']),
+                        int(float(params['n'])), float(params['b']), args['radio_address'])
+                period = 1/float(params['r'])
+                spectrumStarted = True
+                tb.start()
+                time.sleep(period)
+                tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+            elif data.find('spectrum') >= 0 and data.find('exit') == -1:
+                time.sleep(period)
+                tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+            elif data.find('exit') >= 0 or not data:
+                print 'Sending exit'
+                tb.stop()
+                print 'Exited from the spectrum sensing'
+                tcpTimeClientSock.close()
+	        tb.wait()
+                time.sleep(period)
+                break
+        except Exception as inst:
+            print inst
+            tb.stop()
+            tcpTimeClientSock.close()
+            tb.wait()
+            time.sleep(period)
+            break
+
+
+if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Spectrum sensing server.  Replace the CAPITALIZED words with input values')
+    parser.add_argument('-f','--center_frequency', help='Center frequency', required=True)
+    parser.add_argument('-b','--bandwidth', help='Bandwidth, not to exceed 20 MHz', required=True)
+    parser.add_argument('-n','--bins', help='Number of FFT bins.  More for higher accuracy', required=True)
+    parser.add_argument('-r','--rate', help='Number of times per second the data is sent', required=True)
+    parser.add_argument('-p', '--port', type=str, help='set the listening port to PORT', required=True)
+    parser.add_argument('-a','--radio_address', type=str, default='', \
+            help='IP address of USRP (radio) example: -a 192.168.0.10')
+
+    try:
+        args = vars(parser.parse_args())
+    except SystemExit:
+        # It's nice to know if we fail with an exit status
+        exit(1)
+
+    tcpTimeSrvrSock = socket(AF_INET,SOCK_STREAM)
+    tcpTimeSrvrSock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+    tcpTimeSrvrSock.bind(('0.0.0.0' , int(args['port'])))
+    tcpTimeSrvrSock.listen(5)
+    print 'Spectum server listening for connections on port ' +\
+            args['port'] + ' for radio at address "' +\
+            args['radio_address'] + '"'
+
+    while True:
+        try:
+            print 'Waiting for connection'
+            tcpTimeClientSock, addr = tcpTimeSrvrSock.accept()
+            print 'Connected from: ', addr
+            CORNET_3D_Daemon(tcpTimeClientSock, args)
+            #thread.start_new_thread(CORNET_3D_Daemon, (tcpTimeClientSock, addr))
+        except Exception as inst:
+            print inst
+    tcpTimeSrvrSock.close() 
