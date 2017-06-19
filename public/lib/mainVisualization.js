@@ -36,7 +36,7 @@ var corStatus = (function () {
     thisModule.initialize = function () {
 
         socket.on('connect', function() {
-            console.log('Got SocketIO "connect" in mainVisualization');
+            console.log('Got WebSocket "connect" in mainVisualization');
             socket.emit('radiosStatus');
         });
 
