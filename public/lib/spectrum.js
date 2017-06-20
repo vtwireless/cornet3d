@@ -419,13 +419,13 @@ var spectrum = (function () {
     }
 
 
-    function startSpectrum(host, radio_address) {
+    function startSpectrum(host, radio_address, spectrumPort) {
 
         // Get the spectrum parameters from the HTML 5 widgets that are in
         // the page index.html.  Set these variables (m_*) here in this
         // function only, under penalty of death.  Read only anywhere
         // else.
-        console.log('DB STARTING: startSpectrum(host="' + host +
+        console.log('STARTING: startSpectrum(host="' + host +
                     '", radio_address="' + radio_address + '")');
 
         // Width of whole plot in MHz
@@ -458,14 +458,15 @@ var spectrum = (function () {
             // All of these are strings:
             //
             host: host, // host computer that sends the data
-            addr: radio_address, // radio (IP) address
+            addr: radio_address, // USRP (radio) IP address
+            spectrumPort: spectrumPort,
             f: centerFreq, // frequency in Hz
             n: m_numBins.toString(), // number of bins
             b: bandWidth, // bandwidth in Hz
             r: rate // Number of times per second the data is sent
         });
 
-        console.log('DB FINISHED: startSpectrum(host="' + host +
+        console.log('FINISHED: startSpectrum(host="' + host +
                     '", radio_address="' + radio_address + '")');
 
         // The server should respond with many emissions of 'updateSpectrum' 
@@ -476,10 +477,10 @@ var spectrum = (function () {
     //        gridColorID, heatmapDivID, show_floors, showStatus, transParams, crtsMetricsId) {
 
     // Do not call this until socket and radio states are set up.
-    thisModule.initialize = function(radioTag, host, addr, cleanupFunc) {
+    thisModule.initialize = function(radio, cleanupFunc) {
 
         console.log('calling spectrum.initialize(radioTag="'+radioTag+
-                    '", host="'+host+'",addr="'+addr+'",)');
+                    '", host="'+radio['host']+'",addr="'+radio['addr']+'",)');
 
         selOverlay(GetElementById('layer2'), leftGraphMargin, rightGraphMargin);
 
@@ -509,7 +510,7 @@ var spectrum = (function () {
 
         socket.on('error', function(error) { console.error(error) });
 
-        startSpectrum(host, addr);
+        startSpectrum(radio['host'], radio['addr'], radio['spectrumPort']);
     }
 
     thisModule.launchScoreboard = function()

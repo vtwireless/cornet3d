@@ -112,7 +112,8 @@ def CORNET_3D_Daemon(tcpTimeClientSock, args):
                 params =\
                     json.loads(data.strip().split('parameters=')[1])
                 tb = spectrum_sensing_nikita(float(params['f']),
-                        int(float(params['n'])), float(params['b']), args['radio_address'])
+                        int(float(params['n'])), float(params['b']),
+                        params['addr'])
                 period = 1/float(params['r'])
                 spectrumStarted = True
                 tb.start()

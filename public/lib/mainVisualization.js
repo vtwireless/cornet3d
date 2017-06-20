@@ -178,7 +178,7 @@ var corStatus = (function () {
         console.log('1');
         $('#graph_dialog').dialog('option', 'title', tag);
 
-        spectrum.initialize(radio['tag'], radio['host'], radio['addr'], thisModule.showFloors);
+        spectrum.initialize(radio, thisModule.showFloors);
 
         console.log('2');
 

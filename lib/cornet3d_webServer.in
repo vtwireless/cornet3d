@@ -1,38 +1,39 @@
 #!@NODEJS_SHABANG@
 
-// config is derived from the users configuration
-// file configure.js
-const config =
-    require('./configDefaults').
-        configDefaults(require('./configure').configure());
-
-// parse command-line options from program arguments
-const opts = require('./options.js').parse(config);
+// Get configuration add command-line options from program arguments The
+// command-line options will override some of the configuration
+// parameters.
+const config = require('./options.js').parse(require('./configDefaults').
+        configDefaults(require('./configure').configure()));
 
 
 // Debugging spew.
 console.log('config=' + JSON.stringify(config) + '\n');
-console.log('opts=' + JSON.stringify(opts) + '\n');
 
-/////////////////////////////////////////////////////
-// At this point consider this two objects as fixed:
+/////////////////////////////////////////////////////////////////
+// At this point consider config as fixed parameters:
 //
-// config - user configuration from configure.js
-// opts   - command-line options
+// config - user configuration from configure.js and
+//          command-line and environment additions and
+//          overrides
 //
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
 
 // Get some nodeJS modules.
 const
+    // local module of utility functions to help this file be smaller
     util = require('./util'),
+    // common build-in modules
     path = require('path'),
     process = require('process'),
     fs = require('fs'),
+    // express.  At this time is very popular.
     express = require('express'),
+    // Web Sockets.  The fast and stripped down WS.
     webSocket = require('ws'),
+    // Our express App object
     expressApp = express();
-
 
 
 // Configure very simple express services:
@@ -97,6 +98,11 @@ function wsOnConnection(socket, ws) {
         onCallbacks[name] = func;
     };
 
+    socket.RemoveCallback = function(name) {
+        
+        delete onCallbacks[name];
+    };
+
     // Let the client know they connected
     socket.Emit('connect', 'hello client');
 
@@ -110,21 +116,20 @@ function wsOnConnection(socket, ws) {
 
     // Request to send spectrum data from a radio to
     // this client via cornet3d_spectrumServer.
-    socket.On('startSpectrum', function(radioParameters) {
+    socket.On('startSpectrum', function(radio) {
 
         console.log(address + ' "startSpectrum" request');
 
-        util.startSpectrum(radioParameters, socket, config, function(stat, error) {
-            // If this succeeds it will emit 'updateSpectrum'
-            if(error) {
-                console.log(error);
-                socket.Emit('stopSpectrum', radioParameters);
-            } else console.log(stat);
-        });
+        util.connectToSpectrum(radio, socket);
     });
 
+    socket.On('stopSpectrum', function() {
 
-    // TODO: add an emit broadcast and rooms.
+        console.log(address + ' "stopSpectrum" request');
+
+        util.stopSpectrum(socket);
+    });
+
 }
 
 
@@ -138,7 +143,7 @@ function createServer(httpType, port, optArgs = null) {
     else
         throw 'bad server type ' + httpType
 
-    server.listen(parseInt(port), opts.bindAddress, function() {
+    server.listen(parseInt(port), config.bindAddress, function() {
         console.log(httpType +
             ' and webWockets server listening on port: ' +
             port);
@@ -151,12 +156,12 @@ function createServer(httpType, port, optArgs = null) {
 
 // We create two possible servers, one for HTTP and one for HTTPS
 
-if(opts.httpPort !== false)
-    createServer('http', opts.httpPort);
+if(config.httpPort !== false)
+    createServer('http', config.httpPort);
 
 
-if(opts.httpsPort !== false)
-    createServer('https', opts.httpsPort, {
+if(config.httpsPort !== false)
+    createServer('https', config.httpsPort, {
         key: fs.readFileSync(path.join(__dirname, 'key.pem')),
         cert: fs.readFileSync(path.join(__dirname, 'cert.pem'))
     });
