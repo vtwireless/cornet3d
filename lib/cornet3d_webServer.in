@@ -48,7 +48,8 @@ expressApp.use(express.static(fs.realpathSync(path.join(
 // use .on() and .emit().
 function wsOnConnection(socket, ws) {
 
-    var address = socket._socket.remoteAddress + ':' +
+    var address = socket.Address =
+        socket._socket.remoteAddress + ':' +
         socket._socket.remotePort;
     var onCallbacks = {};
 
@@ -99,7 +100,7 @@ function wsOnConnection(socket, ws) {
     };
 
     socket.RemoveCallback = function(name) {
-        
+
         delete onCallbacks[name];
     };
 

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# This script attempts to download libfec from the
+# github.com repo source
+
+
+# -e exit with error status if commands fail
+# -x show
+set -ex
+
+source ../pullCheckGitUrl.bash
+
+rm -rf src/
+mkdir -p src
+
+# PullCheckGitUrl URL TAG REPO_DIR SRC_DIR
+PullCheckGitUrl https://github.com/quiet/libfec.git 1.0 git src
+
+# We created a patch with a diff from two directories
+# and you want src to be the same as A
+# diff -ur src A > patch.diff
+
+cd src
+patch -p1 < ../patch.diff

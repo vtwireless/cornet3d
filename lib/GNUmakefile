@@ -11,7 +11,7 @@ INSTALLED := cornet3d_webServer cornet3d_spectrumServer
 
 cornet3d_webServer_MODE := 755
 
-CLEANERFILES := package-lock.json
+CLEANERFILES := package-lock.json cornet3d_spectrumServer_log
 
 # cert.pem.bl will make both key.pem and cert.pem
 # but we must add key.pem to the clean files and

@@ -83,10 +83,16 @@ var spectrum = (function () {
         return parts.join(".");
     }
 
-    function processResponse(data) {
+    function processResponse(data, radio) {
         //alert(data[2]);
         //TODO: why we are mapping the data here?
-        var data = data.map(function(x) { return Math.log(x)*0.5 + 4; });
+
+        var x = new Float32Array(data);
+
+        for(var i=0; i<x.length; i++)
+            console.log('data[' + i + '] =======' + x[i]);
+
+        //var data = data.map(function(x) { return Math.log(x)*0.5 + 4; });
         spectrum_data = data;
         //to avoid displaying negative data values as height and color	
         for(var i=0; i<data.length; i++)
@@ -104,7 +110,8 @@ var spectrum = (function () {
         graphLabels=[];
         var nticks=10;
         for(var i=0; i<=nticks; i++) {
-            graphLabels.push(Math.round((thisModule.lowBound_+(i)*thisModule.bandwidth_/(nticks))*1000000)/1000000);
+            graphLabels.push(Math.round((thisModule.lowBound_+
+                    (i)*thisModule.bandwidth_/(nticks))*1000000)/1000000);
         }
 
         makeGraph(m_canvasID, data, graphLabels);
@@ -479,7 +486,7 @@ var spectrum = (function () {
     // Do not call this until socket and radio states are set up.
     thisModule.initialize = function(radio, cleanupFunc) {
 
-        console.log('calling spectrum.initialize(radioTag="'+radioTag+
+        console.log('calling spectrum.initialize(radio tag="'+radio['tag']+
                     '", host="'+radio['host']+'",addr="'+radio['addr']+'",)');
 
         selOverlay(GetElementById('layer2'), leftGraphMargin, rightGraphMargin);
@@ -487,14 +494,11 @@ var spectrum = (function () {
         var prevTime = 0;
         socket.on('updateSpectrum', function(data) {
 
-            console.log('updateSpectrum ++++++++++++++++++++++++++++++');
-
-            console.log('updateSpectrum DATA=' + data.toString());
+            console.log('updateSpectrum DATA=' + JSON.stringify(data));
             
             if(new Date().getTime() - prevTime >= m_period) {
 
-
-                if(processResponse(JSON.parse(data))) {
+                if(processResponse(data, radio)) {
                     cleanupFunc();
                     return;
                 }

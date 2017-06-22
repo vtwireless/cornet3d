@@ -23,6 +23,8 @@
 
 # TODO: remove stuff that is not used
 
+import sys
+import os
 from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import fft
@@ -37,6 +39,10 @@ import time
 import argparse
 #import thread
 from socket import *
+
+# do not buffer stdout so we can see the print
+# in the log file.
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 class spectrum_sensing_nikita(gr.top_block):
 
@@ -95,6 +101,12 @@ class spectrum_sensing_nikita(gr.top_block):
         self.uhd_usrp_source_0.set_bandwidth(self.bandwidth, 0)
 
 
+
+def send(tcpTimeClientSock, tb)
+    print repr(tb.blocks_probe_signal_vx_0.level())
+    tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+
+
 def CORNET_3D_Daemon(tcpTimeClientSock, args):
 
     tb = spectrum_sensing_nikita(float(args['center_frequency']),
@@ -118,10 +130,10 @@ def CORNET_3D_Daemon(tcpTimeClientSock, args):
                 spectrumStarted = True
                 tb.start()
                 time.sleep(period)
-                tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+                send(tcpTimeClientSock, tb)
             elif data.find('spectrum') >= 0 and data.find('exit') == -1:
                 time.sleep(period)
-                tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+                send(tcpTimeClientSock, tb)
             elif data.find('exit') >= 0 or not data:
                 print 'Sending exit'
                 tb.stop()

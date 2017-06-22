@@ -150,13 +150,10 @@ installed := $(sort\
 built := $(sort $(built) $(BUILD_NO_INSTALL))
 
 
-cleanfiles := $(built) $(CLEANFILES)
+cleanfiles := $(sort $(built) $(CLEANFILES))
 cleanerfiles := $(sort $(CLEANERFILES) $(wildcard *.pyc))
 
 
-
-# default target
-build: $(downloaded) $(built)
 
 # this will make config.make automatically
 config:
@@ -166,11 +163,14 @@ ifneq ($(subdirs),)
 # directory recursive makes
 define Rec
   $$(patsubst rec_%,%,$(1)): $(1)
+  # We wish to recurse before local
 endef
 rec := rec_build rec_clean rec_cleaner\
  rec_distclean rec_install rec_download\
  rec_config rec_debug
 $(foreach targ,$(rec),$(eval $(call Rec,$(targ))))
+# Keep the building in sub-directories first
+$(downloaded) $(built): | rec_build
 undefine Rec
 
 $(rec):
@@ -178,6 +178,11 @@ $(rec):
  $(MAKE) -C $$d $(patsubst rec_%,%,$(@)) || exit 1 ;\
  done
 endif
+
+# default target
+build: $(downloaded) $(built)
+# download before building
+$(built): | $(downloaded)
 
 
 # run 'make debug' to just spew this stuff:
@@ -234,11 +239,14 @@ $(in_files):
 
 
 # We have just one install directory for a given source directory
-install: build
+install: build 
 ifneq ($(INSTALL_DIR),)
 	mkdir -p $(INSTALL_DIR)
 ifneq ($(installed),)
 	cp -r $(installed) $(INSTALL_DIR)
+endif
+ifneq ($(POST_INSTALL_COMMAND),)
+	$(POST_INSTALL_COMMAND)
 endif
 endif
 
@@ -257,6 +265,9 @@ ifneq ($(cleanfiles),)
 endif
 
 distclean cleaner: clean
+ifneq ($(CLEANERDIRS),)
+	rm -rf $(CLEANERDIRS)
+endif
 ifneq ($(downloaded),)
 	rm -rf $(downloaded)
 endif

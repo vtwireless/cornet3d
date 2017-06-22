@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+# -e exit with error status if commands fail
+# -x show
+set -ex
+
+source ../pullCheckGitUrl.bash
+
+mkdir -p src
+
+# PullCheckGitUrl URL TAG REPO_DIR SRC_DIR
+PullCheckGitUrl https://github.com/jgaeddert/liquid-dsp.git a4d7c80d3 git src
+cd src
+patch -p1 < ../liquid-dsp_isnan.patch
+

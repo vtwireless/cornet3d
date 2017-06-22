@@ -10,6 +10,7 @@ var socket = (function() {
     var url = location.protocol.replace(/^http/, 'ws') +
         '//' + location.hostname + ':' + location.port + '/';
     var ws = new WebSocket(url);
+    ws.binaryType = 'arraybuffer';
     var onCallbacks = {};
 
     // This calls the function from 
@@ -27,13 +28,13 @@ var socket = (function() {
         if(name === undefined || obj.args === undefined ||
                 !(obj.args instanceof Array)) {
             alert('Bad WebSocket "on" message from ' +
-                    ws.url + '\n  ' + e.data);
+                    ws.url + '\n  ' + ev.data);
             return;
         }
         if(onCallbacks[name] === undefined) {
             alert('WebSocket on callback "' + name +
                     '" not found for message from ' + ws.url + ':' +
-                    '\n  ' + e.data);
+                    '\n  ' + ev.data);
             return;
         }
         if(typeof onCallbacks[name] === 'function')
