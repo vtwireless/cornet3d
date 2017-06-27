@@ -3,6 +3,8 @@
 top_srcdir := ../..
 
 # There to install selected files in this directory
-INSTALL_DIR = $(PREFIX)/public/icons
+INSTALL_DIR = $(PREFIX)/public/config
+
 
 include $(top_srcdir)/common.make
+

@@ -3,6 +3,6 @@
 top_srcdir := ../..
 
 # There to install selected files in this directory
-INSTALL_DIR = $(SERVER_DOC_ROOT)/lib
+INSTALL_DIR = $(PREFIX)/public/lib
 
 include $(top_srcdir)/common.make

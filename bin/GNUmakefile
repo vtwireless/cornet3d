@@ -7,7 +7,7 @@ top_srcdir := ..
 INSTALL_DIR = $(PREFIX)/bin
 
 # What files are built and installed
-BUILT := cornet3d_webServer cornet3d_spectrumServer
+BUILD := cornet3d_webServer cornet3d_spectrumServer
 
 
 # How to make those files
