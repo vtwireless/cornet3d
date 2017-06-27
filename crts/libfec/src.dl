@@ -1,20 +1,15 @@
 #!/bin/bash
 
-# This script attempts to download libfec from the
-# github.com repo source
+source ../GetSrcFromGithub.bash
 
+#Usage: GetSrcFromGithub user package tag [sha512]
 
-# -e exit with error status if commands fail
-# -x show
-set -ex
+GetSrcFromGithub quiet libfec 1.0\
+ b919904179ae0fd6fa2e56adb878eba9c\
+d9db124828348c30c321921fa88884af4b\
+012f6488f49cbd01330e3d33c0c9da7f7a\
+ce7ce77a755dc147728f65dd0fd
 
-source ../pullCheckGitUrl.bash
-
-rm -rf src/
-mkdir -p src
-
-# PullCheckGitUrl URL TAG REPO_DIR SRC_DIR
-PullCheckGitUrl https://github.com/quiet/libfec.git 1.0 git src
 
 # We created a patch with a diff from two directories
 # and you want src to be the same as A

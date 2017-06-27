@@ -1,16 +1,19 @@
 #!/bin/bash
 
+source ../GetSrcFromGithub.bash
 
-# -e exit with error status if commands fail
-# -x show
-set -ex
+#Usage: GetSrcFromGithub user package tag [sha512]
 
-source ../pullCheckGitUrl.bash
+GetSrcFromGithub jgaeddert liquid-dsp a4d7c80d3\
+ 0d44f431c4fe098489872edac89cdbb308563cae891ba62888fe3\
+c763a7b9b53858396e966ef512cf208c2bb0225a6716ba02740be4538b7\
+1f0d4bec85c9306f
 
-mkdir -p src
-
-# PullCheckGitUrl URL TAG REPO_DIR SRC_DIR
-PullCheckGitUrl https://github.com/jgaeddert/liquid-dsp.git a4d7c80d3 git src
 cd src
 patch -p1 < ../liquid-dsp_isnan.patch
 
+# This is so we do not have to install liquid to
+# use:
+#include <liquid/liquid.h>
+
+ln -s include liquid

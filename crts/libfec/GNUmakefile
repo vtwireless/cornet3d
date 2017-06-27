@@ -4,9 +4,6 @@
 top_srcdir := ../..
 
 
-CLEANERDIRS := git
-
-
 build: src/libfec.so
 
 

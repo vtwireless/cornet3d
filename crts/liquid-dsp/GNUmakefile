@@ -4,8 +4,6 @@
 top_srcdir := ../..
 
 
-CLEANERDIRS := git
-
 # src/ is built with src.dl
 
 build: src/libliquid.so

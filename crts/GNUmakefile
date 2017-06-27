@@ -9,7 +9,7 @@ BIN = $(PREFIX)/bin
 INSTALL_DIR = $(BIN)
 
 
-CPPFLAGS = -I include -std=c++11
+CPPFLAGS = -I include -I liquid-dsp/src -std=c++11
 CXXFLAGS = $(CPPFLAGS) -g
 
 # The C++ compiled programs need to find shared libraries when they are
@@ -17,8 +17,8 @@ CXXFLAGS = $(CPPFLAGS) -g
 # which we set using this compiler option.
 SRC_RPATH = -Wl,-rpath,$(CURDIR)/liquid-dsp/src:$(CURDIR)/libfec/src
 
-LIQUID_LDFLAGS = -lliquid -L$(CURDIR)/../1_liquid-dsp/src
-LIBFEC_LDFLAGS = -lfec -L$(CURDIR)/../0_libfec/src
+LIQUID_LDFLAGS = -lliquid -L$(CURDIR)/liquid-dsp/src
+LIBFEC_LDFLAGS = -lfec -L$(CURDIR)/libfec/src
 
 
 
@@ -212,6 +212,6 @@ logs/convert_logs_bin_to_octave: convert_logs_bin_to_octave
 # Add this directory to the recursive build system.  This make file is the
 # only compiled code in this project, so this make file is larger than
 # others.  If more compiled C/C++ program are added to other directories
-# this file should spill into common.make
+# this file should spill some into common.make
 include $(top_srcdir)/common.make
 
