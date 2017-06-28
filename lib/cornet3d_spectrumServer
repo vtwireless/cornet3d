@@ -46,22 +46,33 @@ sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 class spectrum_sensing_nikita(gr.top_block):
 
-    def __init__(self, center_freq, bins, bandwidth, radioAddr):
+    def __init__(self, center_freq_, bins_, bandwidth_, radioAddr_, rate_):
         gr.top_block.__init__(self, "Spectrum Sensing Nikita")
 
         ##################################################
         # Variables
         ##################################################
-        self.samp_rate = samp_rate = bandwidth
-        self.center_freq = center_freq
-        self.bins = bins
-        self.bandwidth = bandwidth
+        self.samp_rate = samp_rate = float(bandwidth_)
+        self.center_freq = center_freq = float(center_freq_)
+        self.bins = bins = int(float(bins_))
+        self.bandwidth = bandwidth = samp_rate
+    
+        print 'spectrum_sensing with parameters:',\
+            'center_freq=', self.center_freq,\
+            'bins=', self.bins,\
+            'bandwidth=', self.bandwidth,\
+            'sample_rate=', float(rate_),\
+            'addr=', radioAddr_
+
+        addr = ''
+        if len(radioAddr_) > 0:
+            addr = 'addr=' + radioAddr_
 
         ##################################################
         # Blocks
         ##################################################
         self.uhd_usrp_source_0 = uhd.usrp_source(
-        	device_addr = 'addr=' + radioAddr,
+        	device_addr = addr,
         	stream_args = uhd.stream_args(
         		cpu_format="fc32",
         		channels=range(1)
@@ -102,18 +113,19 @@ class spectrum_sensing_nikita(gr.top_block):
 
 
 
-def send(tcpTimeClientSock, tb)
-    print repr(tb.blocks_probe_signal_vx_0.level())
-    tcpTimeClientSock.send('%s' % list(tb.blocks_probe_signal_vx_0.level()))
+def send(tcpTimeClientSock, tb):
+    print '%s ' % list(tb.blocks_probe_signal_vx_0.level())
+    tcpTimeClientSock.send('%s ' % list(tb.blocks_probe_signal_vx_0.level()))
 
 
 def CORNET_3D_Daemon(tcpTimeClientSock, args):
 
-    tb = spectrum_sensing_nikita(float(args['center_frequency']),
-            int(float(args['bins'])), float(args['bandwidth']),
-            args['radio_address'])
-    period=1/2.0
-    spectrumStarted = False
+    tb = spectrum_sensing_nikita(args['center_frequency'],\
+            args['bins'], args['bandwidth'],\
+            args['radio_address'], args['rate'])
+    period = 1.0/float(args['rate'])
+    tb.start()
+
     while True:
         try:
             # blocking recv() call
@@ -121,14 +133,12 @@ def CORNET_3D_Daemon(tcpTimeClientSock, args):
             print 'Got:', data, '\n\n'
 
             if data.startswith('parameters='):
-                params =\
-                    json.loads(data.strip().split('parameters=')[1])
-                tb = spectrum_sensing_nikita(float(params['f']),
-                        int(float(params['n'])), float(params['b']),
-                        params['addr'])
-                period = 1/float(params['r'])
-                spectrumStarted = True
+                params = json.loads(data.strip().split('parameters=')[1])
+                tb = spectrum_sensing_nikita(params['center_frequency'],\
+                        params['bins'], params['bandwidth'],\
+                        params['radio_address'], params['rate'])
                 tb.start()
+                period = 1/float(args['rate'])
                 time.sleep(period)
                 send(tcpTimeClientSock, tb)
             elif data.find('spectrum') >= 0 and data.find('exit') == -1:
@@ -154,12 +164,12 @@ def CORNET_3D_Daemon(tcpTimeClientSock, args):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Spectrum sensing server.  Replace the CAPITALIZED words with input values')
-    parser.add_argument('-f','--center_frequency', help='Center frequency', required=True)
-    parser.add_argument('-b','--bandwidth', help='Bandwidth, not to exceed 20 MHz', required=True)
-    parser.add_argument('-n','--bins', help='Number of FFT bins.  More for higher accuracy', required=True)
-    parser.add_argument('-r','--rate', help='Number of times per second the data is sent', required=True)
-    parser.add_argument('-p', '--port', type=str, help='set the listening port to PORT', required=True)
-    parser.add_argument('-a','--radio_address', type=str, default='', \
+    parser.add_argument('-f','--center_frequency', help='Center frequency', default='751000000')
+    parser.add_argument('-b','--bandwidth', help='Bandwidth, not to exceed 20 MHz', default='12000000')
+    parser.add_argument('-n','--bins', help='Number of FFT bins.  More for higher accuracy', default='12')
+    parser.add_argument('-r','--rate', help='Number of times per second the data is sent', default='1')
+    parser.add_argument('-p', '--port', type=str, help='set the listening port to PORT', default='5000')
+    parser.add_argument('-a','--radio_address', type=str, default='',\
             help='IP address of USRP (radio) example: -a 192.168.0.10')
 
     try:

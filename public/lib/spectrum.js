@@ -87,10 +87,7 @@ var spectrum = (function () {
         //alert(data[2]);
         //TODO: why we are mapping the data here?
 
-        var x = new Float32Array(data);
-
-        for(var i=0; i<x.length; i++)
-            console.log('data[' + i + '] =======' + x[i]);
+        console.log("SPECTRUM data= " + data);
 
         //var data = data.map(function(x) { return Math.log(x)*0.5 + 4; });
         spectrum_data = data;
@@ -109,10 +106,8 @@ var spectrum = (function () {
         //Graph
         graphLabels=[];
         var nticks=10;
-        for(var i=0; i<=nticks; i++) {
-            graphLabels.push(Math.round((thisModule.lowBound_+
-                    (i)*thisModule.bandwidth_/(nticks))*1000000)/1000000);
-        }
+        for(var i=0; i<=nticks; i++)
+            graphLabels.push(Math.round(m_lowBand + i*m_bandWidth/(nticks)));
 
         makeGraph(m_canvasID, data, graphLabels);
 
@@ -455,6 +450,7 @@ var spectrum = (function () {
 
         m_highBand = f - b/2; // in MHz
         m_lowBand = f + b/2; // in MHz
+        m_bandWidth = b; // in MHz
         // Number of samples
         m_numBins = Number(GetElementById('n').value);
 

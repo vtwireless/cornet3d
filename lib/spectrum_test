@@ -44,11 +44,11 @@ class spectrum_sensing_nikita(gr.top_block):
         # Blocks
         ##################################################
         self.uhd_usrp_source_0 = uhd.usrp_source(
-        	device_addr = 'addr=' + radioAddr,
+        	device_addr = "",
         	stream_args = uhd.stream_args(
         		cpu_format="fc32",
         		channels=range(1)
-        	),
+        	)
         )
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description=("""
 Spectrum sensing.  Replace the CAPITALIZED words with input values.
-Example run: {file} -f 751000000 -b 12000000 -n 32 -r 1 -a 192.168.10.3
+Example run: {file} -f 751000000 -b 12500000 -n 3 -r 1  -a 192.168.10.2
 """).format(file=__file__))
     parser.add_argument('-f','--center_frequency', help='Center frequency', required=True)
     parser.add_argument('-b','--bandwidth', help='Bandwidth, not to exceed 20 MHz', required=True)
@@ -109,22 +109,22 @@ Example run: {file} -f 751000000 -b 12000000 -n 32 -r 1 -a 192.168.10.3
     parser.add_argument('-r','--rate', help='Number of times per second the data is sent', required=True)
     parser.add_argument('-a','--radio_address', type=str, default='', \
             help='IP address of USRP (radio) example: -a 192.168.10.3')
-    
+
     args = vars(parser.parse_args())
 
+    f = float(args['center_frequency'])
+    n = int(float(args['bins']))
+    b = float(args['bandwidth'])
+    addr = args['radio_address']
 
-    tb = spectrum_sensing_nikita(float(args['center_frequency']),
-            int(float(args['bins'])), float(args['bandwidth']),
-            args['radio_address'])
-    
+    print 'f=', f, 'n=', n, 'b=', b, 'addr=', addr
+
+    tb = spectrum_sensing_nikita(f, n, b, addr)
+    tb.start()
     period=1/float(args['rate'])
-
-    print '%s ' % list(tb.blocks_probe_signal_vx_0.level())
-    print '-------------------' , tb.blocks_probe_signal_vx_0.level()
 
     while True:
 
         time.sleep(period)
-        print repr(tb.blocks_probe_signal_vx_0.level())
-        print ["%30.30e" % i for i in tb.blocks_probe_signal_vx_0.level()]
+        print '%s ' % list(tb.blocks_probe_signal_vx_0.level())
 

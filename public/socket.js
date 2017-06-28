@@ -18,7 +18,7 @@ var socket = (function() {
     // Similar to Socket.IO
     ws.onmessage = function(ev) {
 
-        console.log(ws.protocol + ' message:\n  ' + ev.data);
+        console.log('WebSocket message:\n  ' + ev.data);
 
         // We assume that the data is in a json string like so:
         // ev.data =  { name: messageName, args:  [ {}, {}, {}, ... ] }
@@ -49,7 +49,7 @@ var socket = (function() {
 
     ws.onopen = function(ev) {
 
-        console.log(ws.protocol + ' opened ' + ws.url);
+        console.log('WebSocket  opened ' + ws.url);
     };
 
     // Like socket.IO emit()
@@ -62,12 +62,15 @@ var socket = (function() {
 
     ws.onclose = function(ev) {
 
-        console.log(ws.protocol + ' closed ' + ws.url);
+        console.log('WebSocket  closed ' + ws.url);
+        socket.close();
+        socket = null;
+        ws = null;
     };
 
     ws.onerror = function(ev) {
 
-        var spew = ws.protocol + ' ' + ws.url + ' errored: ' + ev.data;
+        var spew = 'WebSocket ' + ws.url + ' errored: ' + ev.data;
         console.log(spew);
         alert(spew);
     };
