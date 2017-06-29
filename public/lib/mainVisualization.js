@@ -175,11 +175,11 @@ var corStatus = (function () {
         //var tag = 'Real-time spectrum sensing at node ' + radioIndex;
 
         $('#waterfall_dialog').dialog('option', 'title', tag);
-        console.log('1');
         $('#graph_dialog').dialog('option', 'title', tag);
 
+        console.log('1');
+        console.log('spectrum=' + spectrum);
         spectrum.initialize(radio, thisModule.showFloors);
-
         console.log('2');
 
         GetElementById('tick1-x').string=spectrum.lowBound_;

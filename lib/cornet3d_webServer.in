@@ -74,7 +74,7 @@ function wsOnConnection(socket, ws) {
         if(onCallbacks[name] === undefined) {
             console.log('WebSocket on callback "' + name +
                     '" not found for message from ' + ws.url + ':' +
-                    '\n  ' + e.data);
+                    '\n  ' + message);
             return;
         }
         onCallbacks[name](...obj.args);

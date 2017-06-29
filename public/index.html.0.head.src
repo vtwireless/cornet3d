@@ -4,12 +4,12 @@
     <title>CORNET 3D</title>
     <link rel="shortcut icon" href="icons/brainIcon3.png" />
     <!--  =============== JAVASCRIPT FILES ============================= -->
+    <script src="lib/utils.js"></script>
     <script src="socket.js"></script>
     <script src="x3dom.js"></script>
     <script src="lib/otooltip.js"></script>
     <script src="lib/spectrum.js"></script>
     <script src="lib/sensors.js"></script>
-    <script src="lib/utils.js"></script>
     <script src="lib/RGraph.common.core.js"></script>
     <script src="lib/RGraph.line.js"></script>
     <script src="lib/axes.js"></script>
