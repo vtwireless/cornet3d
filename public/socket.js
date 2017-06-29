@@ -18,7 +18,7 @@ var socket = (function() {
     // Similar to Socket.IO
     ws.onmessage = function(ev) {
 
-        console.log('WebSocket message:\n  ' + ev.data);
+        //console.log('WebSocket message:\n  ' + ev.data);
 
         // We assume that the data is in a json string like so:
         // ev.data =  { name: messageName, args:  [ {}, {}, {}, ... ] }
@@ -27,12 +27,12 @@ var socket = (function() {
         var name = obj.name;
         if(name === undefined || obj.args === undefined ||
                 !(obj.args instanceof Array)) {
-            alert('Bad WebSocket "on" message from ' +
+            Fail('Bad WebSocket "on" message from ' +
                     ws.url + '\n  ' + ev.data);
             return;
         }
         if(onCallbacks[name] === undefined) {
-            alert('WebSocket on callback "' + name +
+            Fail('WebSocket on callback "' + name +
                     '" not found for message from ' + ws.url + ':' +
                     '\n  ' + ev.data);
             return;
@@ -44,7 +44,7 @@ var socket = (function() {
             onCallbacks[name].forEach(
                     function(func){ func(...obj.args); });
         else
-            alert('Bad callbacks: ' + onCallbacks[name]);
+            Fail('Bad callbacks: ' + onCallbacks[name]);
     };
 
     ws.onopen = function(ev) {
@@ -70,9 +70,7 @@ var socket = (function() {
 
     ws.onerror = function(ev) {
 
-        var spew = 'WebSocket ' + ws.url + ' errored: ' + ev.data;
-        console.log(spew);
-        alert(spew);
+        Fail('WebSocket ' + ws.url + ' errored: ' + ev.data);
     };
 
     ws.on = function(name, func) {

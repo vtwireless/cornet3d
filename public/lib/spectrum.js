@@ -28,6 +28,9 @@ var spectrum = (function () {
     var fineGrain=true;
     var m_showStatus;
 
+    // m_heatmapAreaId does not change
+    var m_heatmapAreaId = 'heatmapArea';
+
     // m_gridId does not change.
     var m_gridId = 'specGrid';
 
@@ -38,9 +41,7 @@ var spectrum = (function () {
     var m_numBins; // integer
     // TODO: What is the "Number of sweeps" shown in the widget
 
-    //var transparams= {f: '855000000', n: 256, b: '10000000', r:12, s: 1};
 
-    //var m_overlay;
     var leftGraphMargin=70;
     var rightGraphMargin=30;
     var thisModule = {};
@@ -49,12 +50,6 @@ var spectrum = (function () {
     var scoreDiv='scoreDiv';
     var scoreTotal=0;
     var crtsSocket;
-    //in MHZ
-    //var centerF_=855;
-    //thisModule.bandwidth_=12;
-    //thisModule.lowBound_=centerF_-thisModule.bandwidth_/2;
-    //thisModule.selectedBandWidth=0;
-    //var highBound_=centerF_+thisModule.bandwidth_/2;
 
     var trans_x = [];
     trans_x.push({translation:0 , bandwidth:0});
@@ -77,18 +72,21 @@ var spectrum = (function () {
         return parts.join(".");
     }
 
-    function processResponse(data, radio) {
+    function updateSpectrum(data, radio) {
         //alert(data[2]);
         //TODO: why we are mapping the data here?
 
-        console.log("SPECTRUM data= " + data);
+        //console.log("SPECTRUM data= " + data);
 
         //var data = data.map(function(x) { return Math.log(x)*0.5 + 4; });
         spectrum_data = data;
         //to avoid displaying negative data values as height and color	
-        for(var i=0; i<data.length; i++)
+        for(var i=0; i<data.length; i++) {
             if(data[i] < 0)
                 data[i]= 0;
+            // Messing with scaling height
+            data[i] *= 100.0;
+        }
 
         if(data.length<2){
             m_showfloors();
@@ -107,20 +105,17 @@ var spectrum = (function () {
 
         makeGraph(data, graphLabels);
 
-        var colorGrid=GetElementById('specGridColor');
-        //alert(colorGrid.id);
+
         if(m_count==0) {
-            m_width=data.length;
-            m_specrumTimeSlices=[];
-            m_colorTimeSlices=[];
-            m_arrSpecrumTimeSlices=[];
+
+            m_width = data.length;
+            m_specrumTimeSlices = [];
+            m_colorTimeSlices = [];
+            m_arrSpecrumTimeSlices = [];
             m_empty = Array.apply(null, new Array(m_width)).map(Number.prototype.valueOf,0);
-            //var emptyColor = Array.apply(null, new Array(m_width)).map(Number.prototype.valueOf,1);
-            //m_specrumTimeSlices.push(data.join(" "));
             m_specrumTimeSlices.push(data.join(" "));
             m_colorTimeSlices.push(dataToColor(data).join(" "));
             m_arrSpecrumTimeSlices.push(data);
-
 
             for(var i=0; i<(m_slices); i++) {
                 m_specrumTimeSlices.push(m_empty.join(" "));
@@ -129,23 +124,25 @@ var spectrum = (function () {
             }
 
             m_count=1;
+
         } else {
+
             for(var i=0;i<2;i++){
                 m_specrumTimeSlices.pop();
                 m_colorTimeSlices.pop();
                 m_arrSpecrumTimeSlices.pop();
             }
-            if(data.length>m_width){
+            if(data.length > m_width)
                 data=data.slice(0,m_width);
-            }
-            if(data.length<m_width){
+            if(data.length < m_width)
                 data.push(m_empty.slice(0, (m_width-data.length)));
-            }
 
             m_specrumTimeSlices.unshift(data.join(" "));
             m_colorTimeSlices.unshift(dataToColor(data).join(" "));
             m_arrSpecrumTimeSlices.unshift(data);
+
         }
+        
         m_empty = Array.apply(null, new Array(m_width)).map(Number.prototype.valueOf,0);
         m_specrumTimeSlices[m_slices] = m_empty.join(" ");
         m_colorTimeSlices[m_slices] = dataToColor(m_empty).join(" ");
@@ -153,25 +150,22 @@ var spectrum = (function () {
         //2D d3.js heatmap
         thisModule.redrawHeatmap();
 
-        var gridStr = m_specrumTimeSlices.join(" ");
-        var colorStr = m_colorTimeSlices.join(" ");
+        GetElementById('specGridColor').color = m_colorTimeSlices.join(" ");
 
-        colorGrid.color = colorStr;
-        
         var grid=GetElementById(m_gridId);
         grid.setAttribute("xDimension", m_width);
         grid.setAttribute("zDimension", m_slices+1);
         grid.setAttribute("xspacing", 20.25/(m_width-1));
         grid.setAttribute("zspacing", 6.81/(m_slices-1));
-        grid.setAttribute("height", gridStr);
+        grid.setAttribute("height", m_specrumTimeSlices.join(" "));
 
-        //alert(colorStr.split(' ').length + ' ' + gridStr.split(' ').length);
+        console.log('      m_specrumTimeSlices.join(" ") = ' + m_specrumTimeSlices.join(" "));
 
         //reload
         var container = grid.parentNode;
         var content = container.innerHTML;
         container.innerHTML = content;
-        return false; // sucess
+        return false; // success
     }
 
     function fitToContainer(canvas){
@@ -228,12 +222,12 @@ var spectrum = (function () {
 
     thisModule.redrawHeatmap = function() {
 
-        var heatmapArea = GetElementById('heatmapArea');
+        var heatmapArea = GetElementById(m_heatmapAreaId);
 
-        var width = $('#heatmapArea').width();
-        var height = $('#heatmapArea').height();
+        var width = $('#'+m_heatmapAreaId).width();
+        var height = $('#'+m_heatmapAreaId).height();
 
-        var data=m_arrSpecrumTimeSlices;
+        var data = m_arrSpecrumTimeSlices;
 
         (function(heatmap) {
             var dx = heatmap[0].length,
@@ -427,8 +421,10 @@ var spectrum = (function () {
         // the page index.html.  Set these variables (m_*) here in this
         // function only, under penalty of death.  Read only anywhere
         // else.
-        console.log('STARTING: startSpectrum(host="' + host +
-                    '", radio_address="' + radio_address + '")');
+        var spew = 'startSpectrum(host="' + host +
+            '", radio_address="' + radio_address +
+            '", spectrumPort="' + spectrumPort + '")';
+        console.log('STARTING: ' + spew);
 
         // Width of whole plot in MHz
         var b = Number(GetElementById('b').value);
@@ -469,9 +465,7 @@ var spectrum = (function () {
             r: rate // Number of times per second the data is sent
         });
 
-        console.log('FINISHED: startSpectrum(host="' + host +
-                    '", radio_address="' + radio_address + '")');
-
+        console.log('FINISHED: ' + spew);
         // The server should respond with many emissions of 'updateSpectrum' 
     }
 
@@ -494,7 +488,7 @@ var spectrum = (function () {
             
             if(new Date().getTime() - prevTime >= m_period) {
 
-                if(processResponse(data, radio)) {
+                if(updateSpectrum(data, radio)) {
                     cleanupFunc();
                     return;
                 }
@@ -574,7 +568,7 @@ var spectrum = (function () {
         grid.xspacing = "20.25";
         grid.zspacing = "6.81";
 
-        GetElementById(m_heatmapDivID).innerHTML = '';
+        GetElementById(m_heatmapAreaId).innerHTML = '';
     }
 
     thisModule.updateTimeSlices = function(time_slices) {

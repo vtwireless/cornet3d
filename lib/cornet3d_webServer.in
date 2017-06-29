@@ -88,6 +88,8 @@ function wsOnConnection(socket, ws) {
     // Like socket.IO emit()
     socket.Emit = function() {
 
+        if(socket.readyState !== webSocket.OPEN) return;
+
         var args = [].slice.call(arguments);
         var name = args.shift();
         socket.send(JSON.stringify({ name: name, args: args }));

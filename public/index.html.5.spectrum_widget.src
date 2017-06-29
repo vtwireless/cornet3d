@@ -10,13 +10,13 @@
                     <div class="controlTableRow"> 
                         <div class="controlTableCol1">FREQUENCY:</div>
                         <div class="controlTableCol2">
-				<input id='f' size='8' value='770' style='text-align:center'/> MHz
+				<input id='f' size='8' value='751' style='text-align:center'/> MHz
                         </div>
                     </div>
                     <div class="controlTableRow"> 
                         <div class="controlTableCol1">BANDWIDTH:</div>
                         <div class="controlTableCol2">
-			  <input id='b' size='8' value='12' style='text-align:center'/> MHz
+			  <input id='b' size='8' value='24' style='text-align:center'/> MHz
                         </div>
                     </div>
                     <div class="controlTableRow"> 
@@ -28,7 +28,7 @@
                     <div class="controlTableRow"> 
                         <div class="controlTableCol1">UPDATES/SEC:</div>
                         <div class="controlTableCol2">
-			  <input id='r' size='8' value='2' style='text-align:center'/>
+			  <input id='r' size='8' value='4' style='text-align:center'/>
                         </div>
                     </div>
                     <div class="controlTableRow"> 

@@ -10,7 +10,7 @@
 
 # example run:
 #
-#   ./spectrum_test -f 751000000 -b 12000000 -n 32 -r 1 -a 192.168.10.3
+#   ./spectrum_test -f 751000000 -b 12500000 -n 3 -r 1 -a 192.168.10.3
 #
 
 from gnuradio import blocks
@@ -29,28 +29,31 @@ from socket import *
 
 class spectrum_sensing_nikita(gr.top_block):
 
-    def __init__(self, center_freq, bins, bandwidth, radioAddr):
+    def __init__(self, center_freq, bins, bandwidth, radioAddr, rate):
         gr.top_block.__init__(self, "Spectrum Sensing Nikita")
 
-        ##################################################
-        # Variables
-        ##################################################
-        self.samp_rate = samp_rate = bandwidth
-        self.center_freq = center_freq
-        self.bins = bins
-        self.bandwidth = bandwidth
+        print 'spectrum_sensing with parameters:',\
+            'center_freq=', center_freq,\
+            'bins=', bins,\
+            'bandwidth=', bandwidth,\
+            'sample_rate=', rate,\
+            'addr=', radioAddr
+
+        address = ''
+        if ( len(radioAddr) > 0 ):
+            address = 'addr=' + radioAddr
 
         ##################################################
         # Blocks
         ##################################################
         self.uhd_usrp_source_0 = uhd.usrp_source(
-        	device_addr = "",
+        	device_addr = address,
         	stream_args = uhd.stream_args(
         		cpu_format="fc32",
         		channels=range(1)
         	)
         )
-        self.uhd_usrp_source_0.set_samp_rate(samp_rate)
+        self.uhd_usrp_source_0.set_samp_rate(rate)
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_source_0.set_gain(20, 0)
         self.uhd_usrp_source_0.set_bandwidth(bandwidth, 0)
@@ -66,34 +69,6 @@ class spectrum_sensing_nikita(gr.top_block):
         self.connect((self.blocks_stream_to_vector_0, 0), (self.fft_vxx_0, 0))
         self.connect((self.fft_vxx_0, 0), (self.blocks_complex_to_mag_0, 0))
         self.connect((self.blocks_complex_to_mag_0, 0), (self.blocks_probe_signal_vx_0, 0))
-
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def get_center_freq(self):
-        return self.center_freq
-
-    def get_bins(self):
-        return self.bins
-
-    def get_bandwidth(self):
-        return self.bandwidth
-
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
-
-    def set_center_freq(self, center_freq):
-        self.center_freq = center_freq
-        self.uhd_usrp_source_0.set_center_freq(self.center_freq, 0)
-
-    def set_bins(self, bins):
-        self.bins = bins
-
-    def set_bandwidth(self, bandwidth):
-        self.bandwidth = bandwidth
-        self.uhd_usrp_source_0.set_bandwidth(self.bandwidth, 0)
 
 
 
@@ -112,16 +87,17 @@ Example run: {file} -f 751000000 -b 12500000 -n 3 -r 1  -a 192.168.10.2
 
     args = vars(parser.parse_args())
 
+    r = float(args['rate'])
     f = float(args['center_frequency'])
     n = int(float(args['bins']))
     b = float(args['bandwidth'])
     addr = args['radio_address']
 
-    print 'f=', f, 'n=', n, 'b=', b, 'addr=', addr
+    print 'f=', f, 'n=', n, 'b=', b, 'addr=', addr, 'r=', r
 
-    tb = spectrum_sensing_nikita(f, n, b, addr)
+    tb = spectrum_sensing_nikita(f, n, b, addr, r)
     tb.start()
-    period=1/float(args['rate'])
+    period=1.0/r
 
     while True:
 
