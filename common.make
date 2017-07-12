@@ -26,7 +26,7 @@ include $(top_srcdir)/config.make
 
 
 # Installation prefix directory
-PREFIX ?= $(HOME)/cornet3d
+PREFIX ?= $(HOME)/installed/cornet3d
 
 # How to convert .jsp to .js
 # yui-compressor --line-break 60 --type js
