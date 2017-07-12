@@ -7,7 +7,12 @@ top_srcdir := ..
 INSTALL_DIR = $(PREFIX)/lib
 
 # What files are installed
-INSTALLED := cornet3d_webServer cornet3d_spectrumServer
+#
+# We add key.pem to the list of install files and
+# cert.pem is automatically added as it has a build
+# script with file name cert.pem with .bl added.
+#
+INSTALLED := key.pem cornet3d_webServer cornet3d_spectrumServer
 
 cornet3d_webServer_MODE := 755
 
@@ -19,11 +24,6 @@ CLEANERFILES := package-lock.json cornet3d_spectrumServer_log
 # because it's built with a script with it's name
 # cert.pem with .bl added.
 CLEANFILES := key.pem
-
-# We add key.pem to the list of install files and
-# cert.pem is automatically added as it has a build
-# script with file name cert.pem with .bl added.
-INSTALLED := key.pem
 
 include $(top_srcdir)/common.make
 
