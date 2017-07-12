@@ -203,9 +203,11 @@ clean: localclean
 
 localclean:
 	rm -f build/*.o build/*.d
+	rm -rf logs
 
 
 logs/convert_logs_bin_to_octave: convert_logs_bin_to_octave
+	mkdir -p logs
 	cp $< $@
 
 
