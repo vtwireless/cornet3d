@@ -66,8 +66,9 @@ ifndef top_srcdir
     $(error top_srcdir was not defined)
 endif
 
-
+ifndef subdirs
 subdirs := $(sort $(patsubst %/GNUmakefile,%,$(wildcard */GNUmakefile)))
+endif
 
 config_vars :=\
  PREFIX\
