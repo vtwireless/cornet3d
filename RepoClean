@@ -1,0 +1,83 @@
+#!/bin/bash
+
+
+
+function usage()
+{
+    cat <<EOF
+
+  Usage: $0
+
+  Remove all generated files that are not in the repository.  This tries
+  to remove all build system generated files.  This does not remove other
+  files that you the developer leave in this source directory tree.  It
+  also does not mess with any of the .git files.
+
+EOF
+
+    exit 1
+}
+
+
+[ -n "$*" ] && usage
+
+set -ex
+
+###########################
+# top directory
+###########################
+
+rm -f quickbuild.make quickbuild.make.org quickbuild.make.tmp
+
+
+
+
+###########################
+# sub-directory   crts
+###########################
+
+cd crts
+
+
+cd -
+
+###########################
+#  sub-directory   
+###########################
+
+
+
+
+
+###########################
+#  sub-directory   
+###########################
+
+
+
+
+###########################
+#  sub-directory   
+###########################
+
+
+
+
+
+###########################
+#  sub-directory   
+###########################
+
+
+###########################
+#  sub-directory   
+###########################
+
+
+
+###########################
+#  sub-directory   
+###########################
+
+
+

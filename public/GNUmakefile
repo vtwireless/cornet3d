@@ -1,7 +1,5 @@
 # This is a GNU make file that uses GNU make make extensions
 
-top_srcdir := ..
-
 # There to install selected files in this directory
 INSTALL_DIR = $(PREFIX)/public
 
@@ -10,8 +8,8 @@ INSTALL_DIR = $(PREFIX)/public
 # index.html.bl
 index.html: $(top_srcdir)/lib/configure.js\
  $(top_srcdir)/lib/configDefaults.js\
- $(sort $(wildcard index.html.*.src))
+ $(sort $(wildcard $(srcdir)/index.html.*.src))
 
 
-include $(top_srcdir)/common.make
+include ../quickbuild.make
 

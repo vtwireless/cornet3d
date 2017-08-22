@@ -1,8 +1,5 @@
 # This is a GNU make file that uses GNU make make extensions
 
-# Where is this make file?
-top_srcdir := ../..
-
 
 build: src/libfec.so
 
@@ -12,7 +9,7 @@ build: src/libfec.so
 # with all files in it we can't have
 # src/libfec.so have dependent on src/.
 
-src/libfec.so: | src
+src/libfec.so: src
 	cd src
 	CFLAGS="-fPIC -march=native -g -O2 -Wall" ./configure --prefix=$(PREFIX)
 	($(MAKE) -j $(shell nproc || echo '3'))
@@ -25,4 +22,4 @@ $(PREFIX)/lib/libfec.so:
 	($(MAKE) install)
 
 
-include $(top_srcdir)/common.make
+include ../../quickbuild.make

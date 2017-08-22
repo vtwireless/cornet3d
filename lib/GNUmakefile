@@ -1,7 +1,5 @@
 # This is a GNU make file that uses GNU make make extensions
 
-# Where is this make file?
-top_srcdir := ..
 
 # There to install selected files in this directory
 INSTALL_DIR = $(PREFIX)/lib
@@ -25,5 +23,4 @@ CLEANERFILES := package-lock.json cornet3d_spectrumServer_log
 # cert.pem with .bl added.
 CLEANFILES := key.pem
 
-include $(top_srcdir)/common.make
-
+include ../quickbuild.make

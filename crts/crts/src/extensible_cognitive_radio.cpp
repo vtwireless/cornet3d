@@ -924,7 +924,7 @@ void ExtensibleCognitiveRadio::transmit_frame(unsigned int frame_type,
 
   pthread_mutex_lock(&tx_mutex);
 
-  // assemble frame
+  // assemble frame using liquid-dsp
   ofdmflexframegen_assemble(fg, tx_header, _payload, _payload_len);
 
   // generate a single OFDM frame
@@ -1369,7 +1369,7 @@ void *ECR_rx_worker(void *_arg) {
         ECR->update_rx_params();
       pthread_mutex_unlock(&ECR->rx_mutex);
       pthread_mutex_unlock(&ECR->rx_params_mutex);
-      
+
       // we need to tightly control the state of the worker thread
       // to protect against issues with abrupt starts and stops
       if (ECR->rx_state == RX_STOPPED){
@@ -1705,6 +1705,8 @@ void *ECR_tx_worker(void *_arg) {
       int payload_byte_length =
           (int)ceilf((float)(payload_sym_length * bps) / 8.0);
 
+      // TODO: Looks like ECR->tx_state is being read here while
+      // it may be written to by another thread.
       while (nread < payload_byte_length && (ECR->tx_state != TX_STOPPED)) {
         
         FD_ZERO(&fds);

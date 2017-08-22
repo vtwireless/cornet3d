@@ -188,7 +188,7 @@ void print_node_parameters(struct node_parameters *np);
 
 #define CRTS_MAX_NODES 48
 #define CRTS_TCP_CONTROL_PORT 4444
-#define CRTS_CR_PORT 4444
+#define CRTS_CR_PORT 4444  // UDP 
 #define CRTS_CR_PACKET_LEN 256        // length of network packet data
 #define CRTS_CR_PACKET_NUM_LEN 4      // number of bytes used for packet numbering
 #define CRTS_CR_PACKET_SR_LEN 12      // shift register length for pseudo-random packet generation
