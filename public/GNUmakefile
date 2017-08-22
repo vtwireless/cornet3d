@@ -6,9 +6,11 @@ INSTALL_DIR = $(PREFIX)/public
 # We generate index.html and it depends on these files.  The recipe to
 # build index.html is stated implicitly in common.make using
 # index.html.bl
-index.html: $(top_srcdir)/lib/configure.js\
- $(top_srcdir)/lib/configDefaults.js\
+index.html: ../lib/configure.js\
+ ../lib/configDefaults.js\
  $(sort $(wildcard $(srcdir)/index.html.*.src))
+
+index.html.bl_GEN_COMMENT := // This is a generated file
 
 
 include ../quickbuild.make

@@ -24,20 +24,6 @@ LIBFEC_LDFLAGS = -lfec -L$(LIBFEC_SRC)
 
 
 
-# config_scenario_controllers
-config_scenario_controllers_SOURCES =\
- src/config_scenario_controllers.cpp\
- src/crts.cpp
-config_scenario_controllers_LDFLAGS = $(SRC_RPATH) $(LIQUID_LDFLAGS) -lconfig -lboost_system -lpthread
-
-
-# config_cognitive_engines
-config_cognitive_engines_SOURCES =\
- src/config_cognitive_engines.cpp\
- src/crts.cpp
-config_cognitive_engines_LDFLAGS = $(SRC_RPATH) $(LIQUID_LDFLAGS) -lconfig -lboost_system
-
-
 # crts_interferer
 crts_interferer_SOURCES =\
  src/crts_interferer.cpp\
@@ -99,8 +85,6 @@ convert_logs_bin_to_octave_LDFLAGS = -luhd
 INSTALL_RPATH = patchelf --set-rpath '$(PREFIX)/lib'
 
 POST_INSTALL_COMMAND =\
- $(INSTALL_RPATH) $(BIN)/config_scenario_controllers &&\
- $(INSTALL_RPATH) $(BIN)/config_cognitive_engines &&\
  $(INSTALL_RPATH) $(BIN)/crts_interferer &&\
  $(INSTALL_RPATH) $(BIN)/crts_cognitive_radio &&\
  $(INSTALL_RPATH) $(BIN)/crts_controller
