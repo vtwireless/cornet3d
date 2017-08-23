@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# This file is part of the quickbuild software package.
+# 
+# quickbuild is free software that is distributed under the free software
+# foundation's GNU Affero General Public License (AGPL) version 3.
+#
+# For more information see the quickbuild package homepage at:
+#   https://github.com/lanceman2/quickbuild
+#
+# You can get the latest version of this file from:
+# 
+#  https://raw.githubusercontent.com/lanceman2/quickbuild/master/examples/bootstrap_download/bootstrap
+#
+##############################################################################
+
+
 # The tag can be "master" or a full git check-in hash in lower case hex
 # like for example:
 #tag=dc184319be9a272ffa4528f5bb5d0902f1edbbbb

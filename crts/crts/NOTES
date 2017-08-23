@@ -1,0 +1,64 @@
+Development notes:
+
+  config_* programs are removed.  They are not an acceptable coding
+  practice.  They make the idea of standard installation not practical.
+  They are replaced by DSO plugins, which is a standard coding practice.
+
+
+  We have two main programs:
+
+    1. Controller or ScenarioController
+
+    2. CognitiveRadio
+
+
+
+  We have three user libraries that users interface with via
+  user's DSO plugin:
+
+     1. ScenarioController  name prefix SC
+
+     2. CognitiveRadio     name prefix CR
+
+     3. Common Utility Library  name prefix ??
+
+         has CPP MACROs for debugging
+
+         Q: is it used by CRTS users that write
+            plugins?
+
+        crts.cpp
+
+
+  We have two types of DSO plugins:
+
+     1. ScenarioController  user interface name prefix SC
+
+     2. CognitiveRadio     user interface name prefix CR or CE for CogitiveEngine?
+
+
+  The plugins are written using interfaces that are provided by the two
+  libraries.  To make a plugin DSO (*.so file) you just make a shared
+  object file that sees the library interfaces in the library header file,
+  but do not link until they are running in the 
+
+
+  There is and over laying configure files scheme that currently has
+  configuration files hard coded, and need to get un-hard-coded.
+  Command-line options will make that straight forward.
+
+
+  Major coding foobars need fixing.
+
+
+  The current over laying system IPC architecture must be redesigned.
+
+  Why:
+
+    The current system will not work at all with a M computer to N USRP
+    IP/Ethernet/Hardware interconnectivity without work-arounds.  The
+    needed work-arounds make the system very clunky and may not be
+    adaptable by others.  The current system is clunky to begin with.
+
+
+
