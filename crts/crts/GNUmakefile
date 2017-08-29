@@ -7,7 +7,7 @@ BIN = $(PREFIX)/bin
 INSTALL_DIR = $(BIN)
 
 
-CPPFLAGS = -I include -I ../liquid-dsp/src -std=c++11
+CPPFLAGS = -I old_include -I ../liquid-dsp/src -std=c++11
 CXXFLAGS = $(CPPFLAGS) -g
 
 # The C++ compiled programs need to find shared libraries when they are
@@ -23,6 +23,7 @@ LIQUID_LDFLAGS = -lliquid -L$(LIQUID_SRC)
 LIBFEC_LDFLAGS = -lfec -L$(LIBFEC_SRC)
 
 
+BUILD_NO_INSTALL := crts_interferer crts_cognitive_radio crts_controller convert_logs_bin_to_octave
 
 # crts_interferer
 crts_interferer_SOURCES =\
@@ -84,13 +85,11 @@ convert_logs_bin_to_octave_LDFLAGS = -luhd
 # can find the libliquid and libfec shared libraries using patchelf.
 INSTALL_RPATH = patchelf --set-rpath '$(PREFIX)/lib'
 
-POST_INSTALL_COMMAND =\
+#POST_INSTALL_COMMAND =\
  $(INSTALL_RPATH) $(BIN)/crts_interferer &&\
  $(INSTALL_RPATH) $(BIN)/crts_cognitive_radio &&\
  $(INSTALL_RPATH) $(BIN)/crts_controller
 
-
-BUILD_NO_INSTALL := logs/convert_logs_bin_to_octave
 
 
 CLEANERDIRS := logs

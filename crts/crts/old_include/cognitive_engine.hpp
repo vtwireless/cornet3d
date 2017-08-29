@@ -44,32 +44,4 @@ public:
   virtual void execute();
 };
 
-
-// A CognitiveEngine module must define the two CognitiveEngine object
-// factory functions: createCE() and destroyCE() and loader() by using
-// this MACRO function.   The exposed symbol is loader() which we get with
-// the dynamic shared object loading API functions dlopen(3), dlsym(3),
-// and dlclose(3).  The argument derived_class_name is the derived
-// class name which must publicly inherit CognitiveEngine.
-// Call this macro outside all code blocks without a tailing semi-colon.
-//
-#define MAKE_CE_MODULE_FACTORY(derived_class_name)\
-    static CognitiveEngine *createCE(int argc, char **argv, ExtensibleCognitiveRadio *ECR)\
-    {\
-        return new derived_class_name(argc, argv, ECR);\
-    }\
-    static void destroyCE(CognitiveEngine *ce)\
-    {\
-        delete ce;\
-    }\
-    extern "C"\
-    {\
-        void loader(void **c, void **d)\
-        {\
-            *c = (void *) createCE;\
-            *d = (void *) destroyCE;\
-        }\
-    }
-
-
-#endif //#ifndef _CE_HPP_
+#endif

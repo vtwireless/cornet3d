@@ -56,33 +56,4 @@ private:
 
 };
 
-
-// A ScenarioController module must define the two ScenarioController
-// object factory functions: createSC() and destroySC() and loader() by
-// using this MACRO function.  The exposed symbol is loader() which we get
-// with the dynamic shared object loading API functions dlopen(3),
-// dlsym(3), and dlclose(3).  The argument derived_class_name is the
-// derived class name which must publicly inherit ScenarioController.
-// Call this macro outside all code blocks without a tailing semi-colon.
-//
-#define MAKE_SC_MODULE_FACTORY(derived_class_name)\
-    static ScenarioController *createSC(int argc, char** argv)\
-    {\
-        return new derived_class_name(argc, argv);\
-    }\
-    static void destroySC(ScenarioController *sc)\
-    {\
-        delete sc;\
-    }\
-    extern "C"\
-    {\
-        void loader(void **c, void **d)\
-        {\
-            *c = (void *) createSC;\
-            *d = (void *) destroySC;\
-        }\
-    }
-
-
-#endif // #ifndef _SC_HPP_
-
+#endif
