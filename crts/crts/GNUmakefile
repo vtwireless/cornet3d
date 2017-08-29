@@ -7,8 +7,8 @@ BIN = $(PREFIX)/bin
 INSTALL_DIR = $(BIN)
 
 
-CPPFLAGS = -I old_include -I ../liquid-dsp/src -std=c++11
-CXXFLAGS = $(CPPFLAGS) -g
+CXXFLAGS := -std=c++11 -g -Wall
+CPPFLAGS := $(CXXFLAGS) -I old_include -I ../liquid-dsp/src
 
 # The C++ compiled programs need to find shared libraries when they are
 # run from this source directory.  They find these libraries using RPATH
