@@ -21,7 +21,7 @@ class ExtensibleCognitiveRadio;
 class CognitiveEngine {
 public:
   CognitiveEngine();
-  ~CognitiveEngine();
+  virtual ~CognitiveEngine();
   ExtensibleCognitiveRadio *ECR;
   /// \brief Executes the custom cognitive engine
   /// as defined by the user.

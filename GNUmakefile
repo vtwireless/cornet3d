@@ -7,5 +7,8 @@ BUILD_NO_INSTALL := cornet3d_webServer
 cornet3d_webServer:
 	ln -fs lib/$@ $@
 
-
 include ./quickbuild.make
+
+ifneq ($(srcdir),.)
+  #$(error You cannot srcdir=$(srcdir)  build this from outside the source tree)
+endif

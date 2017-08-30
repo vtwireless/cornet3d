@@ -26,11 +26,6 @@
 #include "scenario_controller.hpp"
 
 
-// It would be good to remove this include and leave behind just the
-// interfaces that are needed.
-//#include "extensible_cognitive_radio.hpp"
-
-
 #define MAXPENDING 5
 
 // global variables
