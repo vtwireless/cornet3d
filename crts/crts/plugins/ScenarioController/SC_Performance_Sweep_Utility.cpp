@@ -552,6 +552,6 @@ void SC_Performance_Sweep_Utility::read_sweep_cfg() {
 }
 
 
-// Note no semi-colon (;) is used after this CPP marco function:
+// Note no semi-colon (;) is used after this CPP macro function:
 MAKE_SC_MODULE_FACTORY(SC_Performance_Sweep_Utility)
 

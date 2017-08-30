@@ -30,6 +30,9 @@ the directory **PREFIX**.
 
 ## Dependencies
 
+node JS version 7.*.* from source 
+
+
 ```console
 sha512sum
 ```
@@ -39,7 +42,9 @@ GNU make
 ```
 
 ```console
-apt-get install wget
+apt-get install wget autoconf automake libtool libconfig-dev\
+ libconfig-doc libuhd-dev libuhd003 uhd-host libboost-dev\
+ libboost-system-dev
 ```
 
 ```console
