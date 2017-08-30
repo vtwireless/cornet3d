@@ -2,7 +2,7 @@
 
 
 CXXFLAGS := -std=c++11 -g -Wall -Werror
-CPPFLAGS := $(CXXFLAGS) -I../include -I ../../liquid-dsp/src -DDEBUG
+CPPFLAGS := -I../include -I ../../liquid-dsp/src -DDEBUG
 
 
 BIN = $(PREFIX)/bin

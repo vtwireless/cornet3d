@@ -9,7 +9,7 @@ BUILD := cornet3d_webServer cornet3d_spectrumServer
 
 # How to make those files
 cornet3d_webServer cornet3d_spectrumServer:
-	ln -s ../lib/$@ $@
+	ln -sf ../lib/$@ $@
 
 
 include ../quickbuild.make
