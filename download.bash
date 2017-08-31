@@ -1,10 +1,25 @@
 # This is sourced by other files in the build process
 
+function Usage()
+{
+    echo "Usage: Download target url [sha512sum] [--header HEADER]"
+    exit 1
+}
+
+
 function Download()
 {
-    if [ -z "$2" ] ; then
-        echo "Usage: Download target url [sha512sum]"
-        exit 1
+    [ -z "$2" ] && Usage
+
+    local target=$1
+    local url=$2
+    local header=
+    local sha512=
+
+    if [ "$3" == "--header" ] ; then
+        header="$4"
+    elif [ -n "$3" ] ; then
+        sha512sum="$3"
     fi
 
     # fail on error and verbose
@@ -12,18 +27,31 @@ function Download()
 
     set -x
 
-    if ! wget $2 -O $1 --no-use-server-timestamps ; then
-        rm -f $1
+    rm -f $target
+
+    [ -n "$header" ] && echo -e "$header" > $target
+
+    tmpfile=$(mktemp --suffix="${target}_tmp")
+
+    if ! wget $url -O $tmpfile --no-use-server-timestamps ; then
+        rm -f $tmpfile $target
         return 1
     fi
 
-    if [ -n "$3" ] ; then
+    if [ -n "$sha512sum" ] ; then
         # Check that the sha512 hash is correct for this downloaded file:
-        if ! echo "$3  $1" | sha512sum -c ; then
-            rm -f $1
+        if ! echo "$sha512sum  $tmpfile" | sha512sum -c ; then
+            rm -f $tmpfile $target
             return 1
         fi
+    else
+        sha512sum $tmpfile
     fi
+
+    cat $tmpfile >> $target
+
+    rm -f $tmpfile
+
     set +x
 
     return 0 # success

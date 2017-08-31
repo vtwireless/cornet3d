@@ -20,6 +20,7 @@ IN_VARS := DEBUG_SYMBOL_PREFIX MACRO_API_PREFIX
 
 
 crts_controller_SOURCES :=\
+ debug.c\
  crts.cpp\
  timer.cpp\
  crts_controller.cpp\

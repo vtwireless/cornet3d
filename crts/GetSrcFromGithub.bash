@@ -4,6 +4,7 @@
 set -ex
 set -o pipefail
 
+# This gets a tarball from github and than extracts it.
 
 #Usage: GetSrcFromGithub user package tag [sha512]
 

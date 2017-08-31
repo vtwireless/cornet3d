@@ -96,13 +96,24 @@ int receive_msg_from_nodes(int *TCP_nodes, int num_nodes, ScenarioController *SC
   return 0;
 }
 
-ScenarioController* create_sc(struct scenario_parameters *sp){
+static
+ScenarioController* create_sc(struct scenario_parameters *sp,
+        ModuleLoader<ScenarioController, ScenarioController *(*)(int,char**)>
+        *moduleLoader){
   int argc = 0;
   char ** argv = NULL;
   str2argcargv(sp->sc_args, sp->SC, argc, argv);
 
   ScenarioController *SC = 0;
 
+  // TODO: find the path to the DSO plugins
+  // Something like:
+  //
+  //   ../plugins/ScenarioController/"sp->SC".so
+  //
+  ASSERT(moduleLoader->loadFile(sp->SC, 0) == false, "");
+
+  SC = moduleLoader->create(argc, argv);
 
 /*
   // EDIT SET SC START FLAG
@@ -343,8 +354,12 @@ int main(int argc, char **argv) {
       printf("Run time: %lld\n", (long long)sp.run_time);
       printf("Scenario controller: %s\n", sp.SC);
 
+      // We make a DSO (dynamic shared object) plugin loader object in
+      // this block, so it's destructor is called at the end of the
+      // block.
+      ModuleLoader<ScenarioController, ScenarioController *(*)(int,char**)> moduleLoader;
       // create the scenario controller
-      ScenarioController *SC = create_sc(&sp); 
+      ScenarioController *SC = create_sc(&sp, &moduleLoader); 
 
       // determine the start time for the scenario based
       // on the current time and the number of nodes
@@ -598,7 +613,9 @@ int main(int argc, char **argv) {
       }
 
       SC->stop_sc();
-      delete SC;
+
+      //delete SC;
+      moduleLoader.destroy(SC);
 
       if (octave_log_summary)
         log_scenario_summary(i+1, rep_i, scenario_master_name, scenario_name, &sp);

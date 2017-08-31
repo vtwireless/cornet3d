@@ -1,7 +1,0 @@
-#!/bin/bash
-
-. ../../../download.bash
-
-# Usage: Download target url [sha512sum]
-Download ModuleManager.hpp\
- https://raw.githubusercontent.com/lanceman2/moduloader/master/ModuleManager.hpp
