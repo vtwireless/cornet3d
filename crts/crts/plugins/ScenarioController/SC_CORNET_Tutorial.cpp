@@ -1,6 +1,10 @@
-#ifndef _SC_CORNET_Tutorial_
-#define _SC_CORNET_Tutorial_
-
+#include <stdio.h>
+#include <liquid/liquid.h>
+#include <limits.h>
+#include <net/if.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include "scenario_controller.hpp"
 #include "CORNET_3D.hpp"
 
@@ -28,19 +32,6 @@ public:
   virtual void execute();
   virtual void initialize_node_fb();
 };
-
-#endif
-
-
-
-#include <stdio.h>
-#include <liquid/liquid.h>
-#include <limits.h>
-#include <net/if.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "SC_CORNET_Tutorial.hpp"
 
 
 // constructor
@@ -208,5 +199,6 @@ void SC_CORNET_Tutorial::execute() {
 }
 
 
-
+// Note no semi-colon (;) is used after this CPP macro function:
+MAKE_SC_MODULE_FACTORY(SC_CORNET_Tutorial)
 

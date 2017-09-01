@@ -42,7 +42,7 @@ bool ModuleLoader<Base, Create>::loadFile(const char *dso_path, int addLD_flags)
     void *(*loader)(void **, void **) =
          (void *(*)(void **, void **)) dlsym(dhandle, "loader");
     char *error = dlerror();
-    if(error != 0)
+    if(error)
     {
         WARN("dlsym() failed: %s\n", error);
         dlclose(dhandle);

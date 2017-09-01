@@ -32,6 +32,17 @@ crts_controller_LDFLAGS =\
  $(SRC_RPATH) $(LIQUID_LDFLAGS) -Wl,--export-dynamic -ldl -lconfig -lpthread
 
 
+#crts_cognitive_radio_SOURCES =\
+ debug.c\
+ crts.cpp\
+ tun.cpp\
+ timer.cpp\
+ extensible_cognitive_radio.cpp\
+ crts_cognitive_radio.cpp\
+ cognitive_engine.cpp
+crts_cognitive_radio_LDFLAGS = $(SRC_RPATH) $(LIQUID_LDFLAGS) -luhd -lconfig -lpthread
+
+
 
 LIQUID_SRC := $(abspath $(CURDIR)/../../liquid-dsp/src)
 LIBFEC_SRC := $(abspath $(CURDIR)/../../libfec/src)

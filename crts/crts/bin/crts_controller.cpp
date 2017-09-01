@@ -132,7 +132,7 @@ ScenarioController* create_sc(struct scenario_parameters *sp,
   if(!strcmp(sp->SC, "SC_CORNET_Tutorial"))
     SC = new SC_CORNET_Tutorial(argc, argv);
   // EDIT SET SC END FLAG
-  */
+ */
 
   freeargcargv(argc, argv);
  
