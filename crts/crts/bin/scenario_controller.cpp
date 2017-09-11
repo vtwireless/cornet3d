@@ -1,4 +1,5 @@
 #include "scenario_controller.hpp"
+#include "debug.h"
 
 ScenarioController::ScenarioController() {}
 ScenarioController::~ScenarioController() {}
@@ -18,9 +19,11 @@ void ScenarioController::set_node_parameter(int node, char cont_type, void* _arg
   cont_msg[1] = cont_type;
   if(arg_len > 0)
     memcpy((void*)&cont_msg[2], _arg, arg_len);
-        
+
   if (node > sp.num_nodes) {
-    printf("set_node_parameters() was called for a node which exceeds the number of nodes in this scenario\n");
+    WARN("set_node_parameters(node=%d,,) was called for "
+            "a node which exceeds the number of nodes in this scenario\n",
+            node);
     exit(1);
   } else {
     write(TCP_nodes[node-1], cont_msg, 2+arg_len);
@@ -107,11 +110,11 @@ void *sc_worker(void *_arg) {
       // Wait for signal. For now there are only two event types, so
       // if not a timeout assume we've received feedback
       pthread_mutex_lock(&SC->sc_mutex);
-      if (ETIMEDOUT == pthread_cond_timedwait(&SC->sc_execute_sig,
+      if(ETIMEDOUT == pthread_cond_timedwait(&SC->sc_execute_sig,
                                               &SC->sc_mutex, &timeout)){
         SC->sc_event = TIMEOUT;
       }
-      
+
       // execute SC
       SC->execute();
       pthread_mutex_unlock(&SC->sc_mutex);

@@ -144,7 +144,7 @@ function createServer(httpType, port, optArgs = null) {
     else if(httpType === 'https')
         var server = require(httpType).createServer(optArgs, expressApp);
     else
-        throw 'bad server type ' + httpType
+        throw 'bad server type ' + httpType;
 
     server.listen(parseInt(port), config.bindAddress, function() {
         console.log(httpType +

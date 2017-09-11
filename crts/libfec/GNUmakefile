@@ -7,7 +7,7 @@ build: src/libfec.so
 # src/ must be built before stuff in it
 # but since the time stamp of src/ changes
 # with all files in it we can't have
-# src/libfec.so have dependent on src/.
+# src/libfec.so dependent on src/.
 
 src/libfec.so: src
 	cd src

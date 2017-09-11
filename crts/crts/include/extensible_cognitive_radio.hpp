@@ -856,6 +856,10 @@ private:
 
   CognitiveEngine *CE; // pointer to CE object
 
+  // CognitiveEngine * plugin DSO module loader factory destroyer
+  // function.
+  void *(*destroyCE)(CognitiveEngine *);
+
   /// \brief The maximum length of time to go
   /// without an event before executing the CE
   /// under a timeout event. In milliseconds.

@@ -106,12 +106,13 @@ ScenarioController* create_sc(struct scenario_parameters *sp,
 
   ScenarioController *SC = 0;
 
-  // TODO: find the path to the DSO plugins
-  // Something like:
+  // TODO: Find path to DSO plugin file:
+  // ?? LD_LIBRARY_PATH=???
   //
-  //   ../plugins/ScenarioController/"sp->SC".so
-  //
-  ASSERT(moduleLoader->loadFile(sp->SC, 0) == false, "");
+  const ssize_t LEN = 256;
+  char filename[LEN];
+  ASSERT(snprintf(filename, LEN, "../plugins/ScenarioController/%s.so", sp->SC) < LEN, "");
+  ASSERT(moduleLoader->loadFile(filename, 0) == false, "");
 
   SC = moduleLoader->create(argc, argv);
 
@@ -178,7 +179,7 @@ void help_crts_controller() {
   printf(" -a : IP Address - IP address of this computer as seen by remote nodes.\n"
          "      Autodetected by default.\n");
   printf(" -s : Scenario - Specifies a single scenario to run rather than using a\n"
-         "      scenario master file. The path is assumed to start in /scenarios/ e.g.\n"
+         "      scenario master file. The path is assumed to start in scenarios/ e.g.:\n"
          "      -s test_scenarios/tx_gain_sweep\n");
   printf(" -r : Repetitions - Specifies the number of times the provided scenario\n"
          "      will be repeated. This only applies when a scenario is specified with\n"
@@ -186,6 +187,7 @@ void help_crts_controller() {
 }
 
 void terminate(int signum) {
+  NOTICE("caught signal %d", signum);
   printf("Terminating scenario on all nodes\n");
   sig_terminate = 1;
 }
@@ -193,9 +195,9 @@ void terminate(int signum) {
 int main(int argc, char **argv) {
 
   // register signal handlers
-  signal(SIGINT, terminate);
-  signal(SIGQUIT, terminate);
-  signal(SIGTERM, terminate);
+  ASSERT(signal(SIGINT, terminate) != SIG_ERR, "");
+  ASSERT(signal(SIGQUIT, terminate) != SIG_ERR, "");
+  ASSERT(signal(SIGTERM, terminate) != SIG_ERR, "");
 
   sig_terminate = 0;
 
@@ -204,7 +206,7 @@ int main(int argc, char **argv) {
   // Use current username as default username for ssh
   const char* ssh_uname = std::getenv("LOGNAME");
 
-  // Use currnet location of CRTS Directory as defualt for ssh
+  // Use current location of CRTS Directory as default for ssh
   char crts_dir[1000];
   getcwd(crts_dir, 1000);
 
@@ -306,7 +308,7 @@ int main(int argc, char **argv) {
   char scenario_name[251];
   char *scenario_name_ptr;
   bool octave_log_summary;
-  
+
   if (!scenario_opt_given) {
     read_master_parameters(scenario_master_name, &num_scenarios, &octave_log_summary);
   } else {

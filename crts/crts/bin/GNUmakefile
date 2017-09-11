@@ -1,7 +1,7 @@
 # This is a GNU make file that uses GNU make make extensions
 
 
-CXXFLAGS := -std=c++11 -g -Wall -Werror
+CXXFLAGS := -std=c++11 -g -Wall
 CPPFLAGS := -I../include -I ../../liquid-dsp/src -DDEBUG
 
 
@@ -19,6 +19,16 @@ MACRO_API_PREFIX :=
 IN_VARS := DEBUG_SYMBOL_PREFIX MACRO_API_PREFIX
 
 
+
+LIQUID_SRC := $(abspath $(CURDIR)/../../liquid-dsp/src)
+LIBFEC_SRC := $(abspath $(CURDIR)/../../libfec/src)
+
+SRC_RPATH := -Wl,-rpath,$(LIQUID_SRC):$(LIBFEC_SRC)
+
+LIQUID_LDFLAGS := -lliquid -L$(LIQUID_SRC)
+LIBFEC_LDFLAGS := -lfec -L$(LIBFEC_SRC)
+
+
 crts_controller_SOURCES :=\
  debug.c\
  crts.cpp\
@@ -32,7 +42,7 @@ crts_controller_LDFLAGS =\
  $(SRC_RPATH) $(LIQUID_LDFLAGS) -Wl,--export-dynamic -ldl -lconfig -lpthread
 
 
-#crts_cognitive_radio_SOURCES =\
+crts_cognitive_radio_SOURCES =\
  debug.c\
  crts.cpp\
  tun.cpp\
@@ -40,17 +50,9 @@ crts_controller_LDFLAGS =\
  extensible_cognitive_radio.cpp\
  crts_cognitive_radio.cpp\
  cognitive_engine.cpp
-crts_cognitive_radio_LDFLAGS = $(SRC_RPATH) $(LIQUID_LDFLAGS) -luhd -lconfig -lpthread
+crts_cognitive_radio_LDFLAGS = $(SRC_RPATH) $(LIQUID_LDFLAGS) -Wl,--export-dynamic -luhd -ldl -lconfig -lpthread
 
 
-
-LIQUID_SRC := $(abspath $(CURDIR)/../../liquid-dsp/src)
-LIBFEC_SRC := $(abspath $(CURDIR)/../../libfec/src)
-
-SRC_RPATH := -Wl,-rpath,$(LIQUID_SRC):$(LIBFEC_SRC)
-
-LIQUID_LDFLAGS := -lliquid -L$(LIQUID_SRC)
-LIBFEC_LDFLAGS := -lfec -L$(LIBFEC_SRC)
 
 
 
@@ -60,8 +62,8 @@ LIBFEC_LDFLAGS := -lfec -L$(LIBFEC_SRC)
 # can find the installed libliquid and libfec shared libraries at run-time.
 INSTALL_RPATH = patchelf --set-rpath '$(PREFIX)/lib'
 
-#POST_INSTALL_COMMAND =\
- $(INSTALL_RPATH) $(BIN)/crts_controller
-
+POST_INSTALL_COMMAND =\
+ $(INSTALL_RPATH) $(BIN)/crts_controller\
+ $(INSTALL_RPATH) $(BIN)/crts_cognitive_radio
 
 include ../../../quickbuild.make
