@@ -23,4 +23,7 @@ CLEANERFILES := package-lock.json cornet3d_spectrumServer_log
 # cert.pem with .bl added.
 CLEANFILES := key.pem
 
+cornet3d_webServer_GEN_COMMENT :=\
+ // This is a generated file
+
 include ../quickbuild.make
