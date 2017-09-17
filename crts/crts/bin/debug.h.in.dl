@@ -1,7 +1,0 @@
-#!/bin/bash
-
-. ../../../download.bash
-
-# Usage: Download target url [sha512sum]
-Download debug.h.in\
- https://raw.githubusercontent.com/lanceman2/debug/master/debug.h.in

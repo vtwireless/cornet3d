@@ -15,12 +15,16 @@ function Download()
     local url=$2
     local header=
     local sha512=
+    local noCheck=
+    
 
     if [ "$3" == "--header" ] ; then
         header="$4"
     elif [ -n "$3" ] ; then
         sha512sum="$3"
     fi
+
+    [ -n "$sha512sum" ] && noCheck="--no-check-certificate"
 
     # fail on error and verbose
     #trap "rm -f $1" ERR
@@ -31,9 +35,9 @@ function Download()
 
     [ -n "$header" ] && echo -e "$header" > $target
 
-    tmpfile=$(mktemp --suffix="${target}_tmp")
+    tmpfile=$(mktemp --suffix="_download_tmp") || return 1
 
-    if ! wget $url -O $tmpfile --no-use-server-timestamps ; then
+    if ! wget $url -O $tmpfile --no-use-server-timestamps $noCheck ; then
         rm -f $tmpfile $target
         return 1
     fi

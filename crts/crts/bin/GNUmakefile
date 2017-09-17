@@ -11,14 +11,6 @@ BIN = $(PREFIX)/bin
 INSTALL_DIR = $(BIN)
 
 
-# These two variables are used when building debug.c and debug.h
-DEBUG_SYMBOL_PREFIX := crts_
-MACRO_API_PREFIX :=
-# Tell quickbuild to sub @DEBUG_SYMBOL_PREFIX@ @MACRO_API_PREFIX@ (and so
-# on) with the values from the make variables given here:
-IN_VARS := DEBUG_SYMBOL_PREFIX MACRO_API_PREFIX
-
-
 
 LIQUID_SRC := $(abspath $(CURDIR)/../../liquid-dsp/src)
 LIBFEC_SRC := $(abspath $(CURDIR)/../../libfec/src)
