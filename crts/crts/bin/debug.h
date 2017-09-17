@@ -105,9 +105,9 @@ extern void crts_catchSigFault(void);
 
 
 #ifdef DEBUG
-#  define DASSERT(x, fmt, ...) ASSERT(val, fmt, ##__VA_ARGS__)
+#  define DASSERT(val, fmt, ...) ASSERT(val, fmt, ##__VA_ARGS__)
 #else
-#  define DASSERT(x, fmt, ...) /*empty marco*/
+#  define DASSERT(val, fmt, ...) /*empty marco*/
 #endif
 
 #ifdef SPEW_LEVEL_WARN
