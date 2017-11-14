@@ -2,7 +2,7 @@
 web interface to software defined radios
 
 ## Ports
-Ubuntu 16.04
+Ubuntu 16.04, Debain 9
 
 ## Installing
 
@@ -32,6 +32,13 @@ the directory **PREFIX**.
 
 node JS version 7.*.* from source 
 
+The script Install_NodeJS can be used to install
+a very new version of NodeJS, which may not be
+available as a system installed package.  For example
+run something like:
+``` console
+./Install_NodeJS --prefix=/usr/local/packages/nodeJS-v8.1.1
+```
 
 ```console
 sha512sum
